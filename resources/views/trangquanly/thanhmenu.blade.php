@@ -30,10 +30,7 @@
             <li><a href="{{url('monan')}}"><i class="fa fa-circle-o"></i>Món ăn</a></li>
             <li><a href="{{url('hanghoa')}}"><i class="fa fa-circle-o"></i>Hàng hóa</a></li>
             <li><a href="{{url('coso')}}"><i class="fa fa-circle-o"></i>Cơ sở khác</a></li>
-            <li><a href="{{url('tintuc')}}"><i class="fa fa-circle-o"></i>Tin tức</a></li>
-            <li><a href="{{url('binhluan')}}"><i class="fa fa-circle-o"></i>Bình luận</a></li>
             <li><a href="{{url('nguoidung')}}"><i class="fa fa-circle-o"></i>Người dùng</a></li>
-            <li><a href="{{url('index')}}"><i class="fa fa-circle-o"></i>Trang online</a></li>
           </ul>
         </li>
         <li class="active treeview menu-open">

@@ -51,7 +51,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Công ty CP Toàn Phong
+        #
         <small>Bánh cuốn Gia An</small>
       </h1>
     </section>

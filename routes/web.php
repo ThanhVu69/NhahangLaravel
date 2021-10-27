@@ -10,9 +10,9 @@
 |
 */
 // Welcome
-    Route::get('/',function() {
-        return view('welcome');
-    });
+    // Route::get('/',function() {
+    //     return view('trangchu');
+    // });
 // Đăng nhập, đăng xuất
     Route::get('dangnhap','MyController@getdangnhap');
     Route::post('dangnhap','MyController@postdangnhap');
@@ -20,7 +20,7 @@
 
 
 // Trang Chủ
-    Route::get('trangchu','MyController@trangchu',function(){
+    Route::get('/','MyController@trangchu',function(){
 
     })->middleware('adminLogin');
 
