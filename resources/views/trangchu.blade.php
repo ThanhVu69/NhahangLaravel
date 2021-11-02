@@ -51,8 +51,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        #
-        <small>Bánh cuốn Gia An</small>
+        <small>Cửa hàng xxxxxx</small>
       </h1>
     </section>
 
@@ -62,13 +61,13 @@
       <div class="row">
       <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-yellow">
+          <div class="small-box bg-red">
             <div class="inner">
-              <p>Gọi Món (ORDER)</p>
+              <p>Gọi món (ORDER)</p>
               <h3>MENU</h3>
             </div>
             <div class="icon">
-              <i class="fa   fa-file-o"></i>
+            <i class="fa fa-clipboard"></i>
             </div>
             <a href="homie" class="small-box-footer">ORDER <i class="fa fa-arrow-circle-right"></i></a>
           </div>
@@ -76,13 +75,13 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-green">
+          <div class="small-box bg-yellow">
             <div class="inner">
               <p>Hàng tồn</p>
               <h3>ĐẦU CA</h3>
             </div>
             <div class="icon">
-              <i class="fa fa-check"></i>
+             <i class="fa fa-archive"></i>
             </div>
             <a href="baocaohangtondc" class="small-box-footer">Nhập <i class="fa fa-arrow-circle-right"></i></a>
           </div>
@@ -90,17 +89,17 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-navy">
+          <div class="small-box bg-green">
             <div class="inner">
             <p>Nhập </p>
               <h3>Hàng bán</h3>
             </div>
             <div class="icon">
-              <i class="fa  fa-bell-o"></i>
-            </div>
+            <i class="fa fa-cart-plus"></i>          
+          </div>
             <a href="nhaphangan" class="small-box-footer"> Nhập<i class="fa fa-arrow-circle-right"></i></a>
           </div>
-          <div class="small-box bg-red">
+          <!-- <div class="small-box bg-red">
             <div class="inner">
             <p>Nhập</p>
               <h3> Hàng khô</h3>
@@ -109,7 +108,7 @@
               <i class="fa fa-truck"></i>
             </div>
             <a href="nhaphangkho" class="small-box-footer"> Nhập<i class="fa fa-arrow-circle-right"></i></a>
-          </div>
+          </div> -->
         </div>
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
@@ -119,11 +118,11 @@
               <h3>Hàng bán</h3>
             </div>
             <div class="icon">
-              <i class="fa  fa-paper-plane-o"></i>
+            <i class="fa fa-cart-arrow-down"></i>  
             </div>
             <a href="xuathangan" class="small-box-footer">Xuất<i class="fa fa-arrow-circle-right"></i></a>
           </div>
-          <div class="small-box bg-lime">
+          <!-- <div class="small-box bg-lime">
             <div class="inner">
               <p>Xuất </p>
               <h3>Hàng khô</h3>
@@ -132,7 +131,7 @@
               <i class="ion ion-bag"></i>
             </div>
             <a href="xuathangkho" class="small-box-footer">Xuất<i class="fa fa-arrow-circle-right"></i></a>
-          </div>
+          </div> -->
         </div>
         </div>
          <!-- Info Boxes Style 2 -->
@@ -149,8 +148,9 @@
               <span class="progress-description">
                  
             </div> </div> -->
-         <div class="info-box bg-orange">
-            <span class="info-box-icon"><a href="baocaohangton"><i class="ion ion-ios-pricetag-outline"></i></a></span>
+            
+         <div class="info-box bg-navy">
+            <span class="info-box-icon"><a href="baocaohangton"><i class="fa fa-edit"></i></a></span>
 
             <div class="info-box-content">
               <span class="info-box-text">Báo cáo </span>
@@ -164,7 +164,7 @@
             </div> </div>
             <!-- /.info-box-content -->
              <!-- Info Boxes Style 2 -->
-         <div class="info-box bg-green">
+         <div class="info-box bg-purple">
             <span class="info-box-icon"><a href="baocaohanghuy"><i class="fa fa-trash"></i></a></span>
 
             <div class="info-box-content">
@@ -296,7 +296,7 @@
               </div>
               <div class="col-md-8">
               <div class="box-header with-border">
-              <h3 class="box-title">Đơn hàng online</h3>
+              <h3 class="box-title">Đơn hàng</h3>
               <div class="box-body">
               <div class="table-responsive">
                 <table class="table no-margin">

@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
     {
         DB::table('users')->insert(
             [
-                'name'=>'Đặng Thị Lệ',
-                'email'=>'le.dt1994@gmail.com',
+                'name'=>'Nguyễn Việt Hoàng',
+                'email'=>'hoangvn1810@gmail.com',
                 'password'=>bcrypt('12345678'),
                 'SDT'=>'0123456789',
-                'DiaChi'=>'KTX Đại học Thủy Lợi',
+                'DiaChi'=>'Cầu Giấy',
                 'quyen'=> '1',
                 'ChucVu'=>'Quản Lý'
             ]

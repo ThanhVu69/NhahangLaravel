@@ -41,10 +41,6 @@
     @include('trangquanly.thanhmenu')
     <div class="content-wrapper">
       <section class="content-header">
-        <h1>
-          Công ty CP Toàn Phong
-          <small>Bánh cuốn Gia An</small>
-        </h1><br>
         <a href="{{asset('hoadonban')}}" class="btn btn-success btn-sm">Quay lại hóa đơn bán</a>
       </section>
       <!-- Main content -->

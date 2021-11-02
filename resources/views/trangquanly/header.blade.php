@@ -1,8 +1,8 @@
 <header class="main-header">
     <!-- Logo Gia An -->
-    <a href="#" class="logo">
+    <!-- <a href="#" class="logo">
       <img src="{{asset('home/img/logo.jpg')}}" width= "50px" height= "50px">
-    </a>
+    </a> -->
 
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
