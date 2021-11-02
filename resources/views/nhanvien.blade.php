@@ -47,10 +47,6 @@
  <!-- Content Wrapper. Contains page content -->
  <div class="content-wrapper">
  <section class="content-header">
-      <h1>
-        Công ty CP Toàn Phong
-        <small>Bánh cuốn Gia An</small>
-      </h1><br>
       @if($xem_ac[0]->quyen==1)
       <button type="button" name="add" id="add_data" class="btn btn-primary">Thêm nhân viên</button>
       @endif
@@ -167,7 +163,7 @@
 </div>
 </div>
 </section>
-</div>
+<!-- </div>
 
 <footer class="main-footer">
       <div class="pull-right ">
@@ -177,7 +173,7 @@
     </footer>
     
    
-  </div>
+  </div> -->
  
   
 <script type="text/javascript">

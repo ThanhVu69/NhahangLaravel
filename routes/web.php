@@ -27,6 +27,10 @@
 
     })->middleware('adminLogin');
 
+    Route::get('trangchu','MyController@trangchu',function(){
+
+    })->middleware('adminLogin');
+
 
 
 // Món ăn
