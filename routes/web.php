@@ -23,20 +23,23 @@
     Route::get('/','MyController@trangchu',function(){
 
     })->middleware('adminLogin');
+    Route::get('trangchu','MyController@trangchu',function(){
+
+    })->middleware('adminLogin');
 
 
 
 // Món ăn
-    Route::get('monan','MyController@monan',function(){
+    Route::get('monan','MonanController@monan',function(){
     })->middleware('adminLogin');
 // Thêm món ăn
-    Route::get('themmonan','MyController@getthemmonan');
-    Route::post('themmonan','MyController@postthemmonan');
+    Route::get('themmonan','MonanController@getthemmonan');
+    Route::post('themmonan','MonanController@postthemmonan');
 //Sửa món ăn
-    Route::get('suamonan/{id}','MyController@getsuamonan');
-    Route::post('suamonan/{id}','MyController@postsuamonan');
+    Route::get('suamonan/{id}','MonanController@getsuamonan');
+    Route::post('suamonan/{id}','MonanController@postsuamonan');
 //Xóa món ăn
-    Route::get('xoamonan/{id}','MyController@getxoamonan');
+    Route::get('xoamonan/{id}','MonanController@getxoamonan');
 
 
 // NHÂN VIÊN: danh sách, thêm sửa xóa
