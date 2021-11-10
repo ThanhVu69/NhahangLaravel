@@ -17,22 +17,18 @@ use App\ctpxuat;
 
 class PhieuNhapXuatController extends Controller
 {
-    //Phiếu nhập
+//Phiếu nhập
     public function phieunhap()
     {
     $phieunhap= phieunhap::all();
-    return view('phieunhap',compact('phieunhap'));
+    return view('phieunhap.phieunhap',compact('phieunhap'));
     }
 //Phiếu nhập ngày
     public function phieunhapngay(Request $request)
     {   
         $product = phieunhap::where('Ngay','=',$request->Ngay)->get();
-        return view('phieunhapngay',['product'=>$product]);
+        return view('phieunhap.phieunhapngay',['product'=>$product]);
     }
-
-
-
-
 //Chi tiết phiếu nhập
     public function ctpnhap($id)
     {
@@ -40,19 +36,21 @@ class PhieuNhapXuatController extends Controller
     $ctpnhap= ctpnhap::all();
     $ctpnhap= ctpnhap::find($id);
     $ctpnhap= ctpnhap::where('id_phieunhap','=',$id)->get();
-    return view('ctpnhap',['ctpnhap'=>$ctpnhap,'phieunhap'=>$phieunhap]);
+    return view('phieunhap.ctpnhap',['ctpnhap'=>$ctpnhap,'phieunhap'=>$phieunhap]);
     }
+
+
 //Phiếu xuất
     public function phieuxuat()
     {
     $phieuxuat= phieuxuat::all();
-    return view('phieuxuat',['phieuxuat'=>$phieuxuat]);
+    return view('phieuxuat.phieuxuat',['phieuxuat'=>$phieuxuat]);
     }
 //Phiếu xuất ngày
     public function phieuxuatngay(Request $request)
     {   
         $product = phieuxuat::where('Ngay','=',$request->Ngay)->get();
-        return view('phieuxuatngay',['product'=>$product]);
+        return view('phieuxuat.phieuxuatngay',['product'=>$product]);
     }
 //Chi tiết phiếu xuất
     public function ctpxuat($id)
@@ -61,6 +59,6 @@ class PhieuNhapXuatController extends Controller
     $ctpxuat= ctpxuat::all();
     $ctpxuat= ctpxuat::find($id);
     $ctpxuat= ctpxuat::where('id_phieuxuat','=',$id)->get();
-    return view('ctpxuat',['ctpxuat'=>$ctpxuat,'phieuxuat'=>$phieuxuat]);
+    return view('phieuxuat.ctpxuat',['ctpxuat'=>$ctpxuat,'phieuxuat'=>$phieuxuat]);
     }
 }

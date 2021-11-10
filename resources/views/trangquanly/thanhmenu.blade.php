@@ -22,7 +22,7 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
             <span class="pull-right-container">
-              <span class="label label-primary pull-right">5</span>
+              <span class="label label-primary pull-right">4</span>
             </span>
           </a>
           <ul class="treeview-menu">
@@ -60,14 +60,13 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span> -->
             <span class="pull-right-container">
-              <span class="label label-primary pull-right">3</span>
+              <span class="label label-primary pull-right">2</span>
             </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="{{url('doanhthu')}}"><i class="fa fa-circle-o"></i> Doanh thu</a></li>
             <!-- <li><a href="{{url('doanhthuonline')}}"><i class="fa fa-circle-o"></i> Doanh thu online</a></li> -->
-            <li><a href="{{url('hangban')}}"><i class="fa fa-circle-o"></i> Hàng bán</a></li>
-            <li><a href="{{url('hangkho')}}"><i class="fa fa-circle-o"></i> Hàng khô</a></li>
+            <li><a href="{{url('hangban')}}"><i class="fa fa-circle-o"></i> Hàng bán - hàng thô</a></li>
           </ul>
         </li>
       </ul>

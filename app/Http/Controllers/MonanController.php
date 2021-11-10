@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use input;
 
 class MonanController extends Controller
 {
@@ -21,12 +22,12 @@ class MonanController extends Controller
         $iduser = intval(Auth::User()->quyen);
         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
         $monan= monan::groupBy(['id'],['ma'])->get();
-        return view('monan',compact('iduser','xem_ac','monan'));
+        return view('monan.monan',compact('iduser','xem_ac','monan'));
     }  
     // Thêm món ăn
     public function getthemmonan()
     {
-        return view('themmonan');
+        return view('monan.themmonan');
     }
     public function postthemmonan(Request $request)
     {
@@ -51,8 +52,6 @@ class MonanController extends Controller
     $monan->dongia= $request->dongia;
     $monan->khuyenmai= $request->khuyenmai;
     $monan->mota= $request->mota;
-    $monan->spdg= $request->spdg;
-    $monan->top= $request->top;
     $monan->save();
     $request->image->storeAs('images',$filename);
     echo"<script>
@@ -64,7 +63,7 @@ class MonanController extends Controller
     public function getsuamonan($id)
     {
         $monan= monan::find($id);
-        return view('suamonan',compact('monan'));
+        return view('monan.suamonan',compact('monan'));
     }
     public function postsuamonan(Request $request,$id)
     {
@@ -75,8 +74,6 @@ class MonanController extends Controller
     $arr['dongia'] = $request->dongia;
     $arr['khuyenmai'] = $request->khuyenmai;
     $arr['mota'] = $request->mota;
-    $arr['spdg'] = $request->spdg;
-    $arr['top'] = $request->top;
     if($request->hasFile('image')){
         $image= $request->image->getClientOriginalName();
         $arr['image']=$image;
