@@ -179,203 +179,203 @@ class MyController extends Controller
         return view('trangchu', compact('dtngay','hoadonban','total','bill'));
     }
     
-// NHÂN VIÊN
-// Nhân viên: danh sách, thêm, sửa, xóa
-    public function nhanvien()
-    {
-        $iduser = intval(Auth::User()->quyen);
-        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
-        return view('nhanvien',compact('iduser','xem_ac'));
-    }
-    public function getthemnhanvien()
-    {
-    $students = nhanvien::select('id','Ten', 'Ngaysinh','SDT','DiaChi','Vaitro');
-    return Datatables::of($students)   
-    ->addColumn('action', function($student){
-        return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$student->id.'">
-        <i class="glyphicon glyphicon-edit"></i>
-        Sửa</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$student->id.'">
-        <i class="glyphicon glyphicon-remove"></i> Xóa</a>';
-    })
-    ->make(true);
-    }
-    public function postthemnhanvien(Request $request)
-    {
-        $validation = Validator::make($request->all(), [
-            'Ten' => 'required',
-            'Ngaysinh'  => 'required',
-            'SDT'  => 'required',           
-            'DiaChi'  => 'required',
-            'Vaitro'  => 'required'
-        ]);
+// // NHÂN VIÊN
+// // Nhân viên: danh sách, thêm, sửa, xóa
+//     public function nhanvien()
+//     {
+//         $iduser = intval(Auth::User()->quyen);
+//         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+//         return view('nhanvien',compact('iduser','xem_ac'));
+//     }
+//     public function getthemnhanvien()
+//     {
+//     $students = nhanvien::select('id','Ten', 'Ngaysinh','SDT','DiaChi','Vaitro');
+//     return Datatables::of($students)   
+//     ->addColumn('action', function($student){
+//         return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$student->id.'">
+//         <i class="glyphicon glyphicon-edit"></i>
+//         Sửa</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$student->id.'">
+//         <i class="glyphicon glyphicon-remove"></i> Xóa</a>';
+//     })
+//     ->make(true);
+//     }
+//     public function postthemnhanvien(Request $request)
+//     {
+//         $validation = Validator::make($request->all(), [
+//             'Ten' => 'required',
+//             'Ngaysinh'  => 'required',
+//             'SDT'  => 'required',           
+//             'DiaChi'  => 'required',
+//             'Vaitro'  => 'required'
+//         ]);
 
-        $error_array = array();
-        $success_output = '';
-        if ($validation->fails())
-        {
-            foreach($validation->messages()->getMessages() as $field_name => $messages)
-            {
-                $error_array[] = $messages;
-            }
-        }
-        else
-        {
-            if($request->get('button_action') == "insert")
-            {
-                $student = new nhanvien([
-                    'Ten'    =>  $request->get('Ten'),
-                    'Ngaysinh'  =>  $request->get('Ngaysinh'),
-                    'SDT'     =>  $request->get('SDT'),
-                    'DiaChi'     =>  $request->get('DiaChi'),
-                    'Vaitro'     =>  $request->get('Vaitro')
-                ]);
-                $student->save();
-                $success_output = '<div class="alert alert-success">Data Inserted</div>';
-            }
-            if($request->get('button_action') == 'update')
-            {
-                $student = nhanvien::find($request->get('student_id'));
-                $student->Ten = $request->get('Ten');
-                $student->Ngaysinh = $request->get('Ngaysinh');
-                $student->SDT = $request->get('SDT');
-                $student->DiaChi = $request->get('DiaChi');
-                $student->Vaitro = $request->get('Vaitro');
-                $student->save();
-                $success_output = '<div class="alert alert-success">Data Updated</div>';
-            }
-        }
-        $output = array(
-            'error'     =>  $error_array,
-            'success'   =>  $success_output
-        );
-        echo json_encode($output);
-    }
-    public function suanhanvien(Request $request)
-    {
-        $id = $request->input('id');
-        $student = nhanvien::find($id);
-        $output = array(
-            'Ten'    =>  $student->Ten,
-            'Ngaysinh'     =>  $student->Ngaysinh,
-            'SDT'    =>  $student->SDT,
-            'DiaChi'    =>  $student->DiaChi,
-            'Vaitro'    =>  $student->Vaitro
-        );
-        echo json_encode($output);
-    }
-    public function xoanhanvien(Request $request)
-    {
-        $student = nhanvien::find($request->input('id'));
-        if($student->delete())
-        {
-            echo 'Data Deleted';
-        }
-    }
-// KHÁCH ĐẶT BÀN
-// Khách đặt bàn: danh sách, thêm, sửa, xóa
-    public function khachdatban()
-    {
-        $cuahang=cuahang::all();
-        return view('khachdatban',compact('cuahang'));
-    }
-    public function getthemkhachdatban()
-    {
-    $students = Khachdatban::select('id','ten', 'sdt','id_cuahang','songuoi','thoigian','gio','buoi','trangthai','ghichu');
-    return Datatables::of($students)   
-    ->addColumn('action', function($student){
-        return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$student->id.'">
-        <i class="glyphicon glyphicon-edit"></i>
-        Sửa</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$student->id.'">
-        <i class="glyphicon glyphicon-remove"></i> Xóa</a>';
-    })
-    ->make(true);
-    }
-    public function postthemkhachdatban(Request $request)
-    {
-        $validation = Validator::make($request->all(), [
-            'ten' => 'required',
-            'sdt'  => 'required',
-            'id_cuahang'  => 'required',           
-            'songuoi'  => 'required',
-            'thoigian'  => 'required',
-            'gio'  => 'required',
-            'buoi'  => 'required',
-        ]);
+//         $error_array = array();
+//         $success_output = '';
+//         if ($validation->fails())
+//         {
+//             foreach($validation->messages()->getMessages() as $field_name => $messages)
+//             {
+//                 $error_array[] = $messages;
+//             }
+//         }
+//         else
+//         {
+//             if($request->get('button_action') == "insert")
+//             {
+//                 $student = new nhanvien([
+//                     'Ten'    =>  $request->get('Ten'),
+//                     'Ngaysinh'  =>  $request->get('Ngaysinh'),
+//                     'SDT'     =>  $request->get('SDT'),
+//                     'DiaChi'     =>  $request->get('DiaChi'),
+//                     'Vaitro'     =>  $request->get('Vaitro')
+//                 ]);
+//                 $student->save();
+//                 $success_output = '<div class="alert alert-success">Data Inserted</div>';
+//             }
+//             if($request->get('button_action') == 'update')
+//             {
+//                 $student = nhanvien::find($request->get('student_id'));
+//                 $student->Ten = $request->get('Ten');
+//                 $student->Ngaysinh = $request->get('Ngaysinh');
+//                 $student->SDT = $request->get('SDT');
+//                 $student->DiaChi = $request->get('DiaChi');
+//                 $student->Vaitro = $request->get('Vaitro');
+//                 $student->save();
+//                 $success_output = '<div class="alert alert-success">Data Updated</div>';
+//             }
+//         }
+//         $output = array(
+//             'error'     =>  $error_array,
+//             'success'   =>  $success_output
+//         );
+//         echo json_encode($output);
+//     }
+//     public function suanhanvien(Request $request)
+//     {
+//         $id = $request->input('id');
+//         $student = nhanvien::find($id);
+//         $output = array(
+//             'Ten'    =>  $student->Ten,
+//             'Ngaysinh'     =>  $student->Ngaysinh,
+//             'SDT'    =>  $student->SDT,
+//             'DiaChi'    =>  $student->DiaChi,
+//             'Vaitro'    =>  $student->Vaitro
+//         );
+//         echo json_encode($output);
+//     }
+//     public function xoanhanvien(Request $request)
+//     {
+//         $student = nhanvien::find($request->input('id'));
+//         if($student->delete())
+//         {
+//             echo 'Data Deleted';
+//         }
+//     }
+// // KHÁCH ĐẶT BÀN
+// // Khách đặt bàn: danh sách, thêm, sửa, xóa
+//     public function khachdatban()
+//     {
+//         $cuahang=cuahang::all();
+//         return view('khachdatban',compact('cuahang'));
+//     }
+//     public function getthemkhachdatban()
+//     {
+//     $students = Khachdatban::select('id','ten', 'sdt','id_cuahang','songuoi','thoigian','gio','buoi','trangthai','ghichu');
+//     return Datatables::of($students)   
+//     ->addColumn('action', function($student){
+//         return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$student->id.'">
+//         <i class="glyphicon glyphicon-edit"></i>
+//         Sửa</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$student->id.'">
+//         <i class="glyphicon glyphicon-remove"></i> Xóa</a>';
+//     })
+//     ->make(true);
+//     }
+//     public function postthemkhachdatban(Request $request)
+//     {
+//         $validation = Validator::make($request->all(), [
+//             'ten' => 'required',
+//             'sdt'  => 'required',
+//             'id_cuahang'  => 'required',           
+//             'songuoi'  => 'required',
+//             'thoigian'  => 'required',
+//             'gio'  => 'required',
+//             'buoi'  => 'required',
+//         ]);
 
-        $error_array = array();
-        $success_output = '';
-        if ($validation->fails())
-        {
-            foreach($validation->messages()->getMessages() as $field_name => $messages)
-            {
-                $error_array[] = $messages;
-            }
-        }
-        else
-        {
-            if($request->get('button_action') == "insert")
-            {
-                $student = new Khachdatban([
-                    'ten'    =>  $request->get('ten'),
-                    'sdt'  =>  $request->get('sdt'),
-                    'id_cuahang'     =>  $request->get('id_cuahang'),  
-                    'songuoi'     =>  $request->get('songuoi'),
-                    'thoigian'     =>  $request->get('thoigian'),
-                    'gio'     =>  $request->get('gio'),
-                    'buoi'     =>  $request->get('buoi'),
-                    'trangthai'     =>  $request->get('trangthai'),
-                    'ghichu'        => $request->get('ghichu')
-                ]);
-                $student->save();
-                $success_output = '<div class="alert alert-success">Data Inserted</div>';
-            }
-            if($request->get('button_action') == 'update')
-            {
-                $student = Khachdatban::find($request->get('student_id'));
-                $student->ten = $request->get('ten');
-                $student->sdt = $request->get('sdt');
-                $student->id_cuahang = $request->get('id_cuahang');
-                $student->songuoi = $request->get('songuoi');
-                $student->thoigian = $request->get('thoigian');
-                $student->gio = $request->get('gio');
-                $student->buoi = $request->get('buoi');
-                $student->trangthai = $request->get('trangthai');
-                $student->ghichu = $request->get('ghichu');
-                $student->save();
-                $success_output = '<div class="alert alert-success">Data Updated</div>';
-            }
-        }
-        $output = array(
-            'error'     =>  $error_array,
-            'success'   =>  $success_output
-        );
-        echo json_encode($output);
-    }
-    public function suakhachdatban(Request $request)
-    {
-        $id = $request->input('id');
-        $student = Khachdatban::find($id);
-        $output = array(
-            'ten'    =>  $student->ten,
-            'sdt'     =>  $student->sdt,
-            'id_cuahang'    =>  $student->id_cuahang,
-            'thoigian'    =>  $student->thoigian,
-            'gio'    =>  $student->gio,
-            'buoi'    =>  $student->buoi,
-            'songuoi'    =>  $student->songuoi,
-            'trangthai'    =>  $student->trangthai,
-            'ghichu'    =>  $student->ghichu,
-        );
-        echo json_encode($output);
-    }
-    public function xoakhachdatban(Request $request)
-    {
-        $student = Khachdatban::find($request->input('id'));
-        if($student->delete())
-        {
-            echo 'Data Deleted';
-        }
-    }
+//         $error_array = array();
+//         $success_output = '';
+//         if ($validation->fails())
+//         {
+//             foreach($validation->messages()->getMessages() as $field_name => $messages)
+//             {
+//                 $error_array[] = $messages;
+//             }
+//         }
+//         else
+//         {
+//             if($request->get('button_action') == "insert")
+//             {
+//                 $student = new Khachdatban([
+//                     'ten'    =>  $request->get('ten'),
+//                     'sdt'  =>  $request->get('sdt'),
+//                     'id_cuahang'     =>  $request->get('id_cuahang'),  
+//                     'songuoi'     =>  $request->get('songuoi'),
+//                     'thoigian'     =>  $request->get('thoigian'),
+//                     'gio'     =>  $request->get('gio'),
+//                     'buoi'     =>  $request->get('buoi'),
+//                     'trangthai'     =>  $request->get('trangthai'),
+//                     'ghichu'        => $request->get('ghichu')
+//                 ]);
+//                 $student->save();
+//                 $success_output = '<div class="alert alert-success">Data Inserted</div>';
+//             }
+//             if($request->get('button_action') == 'update')
+//             {
+//                 $student = Khachdatban::find($request->get('student_id'));
+//                 $student->ten = $request->get('ten');
+//                 $student->sdt = $request->get('sdt');
+//                 $student->id_cuahang = $request->get('id_cuahang');
+//                 $student->songuoi = $request->get('songuoi');
+//                 $student->thoigian = $request->get('thoigian');
+//                 $student->gio = $request->get('gio');
+//                 $student->buoi = $request->get('buoi');
+//                 $student->trangthai = $request->get('trangthai');
+//                 $student->ghichu = $request->get('ghichu');
+//                 $student->save();
+//                 $success_output = '<div class="alert alert-success">Data Updated</div>';
+//             }
+//         }
+//         $output = array(
+//             'error'     =>  $error_array,
+//             'success'   =>  $success_output
+//         );
+//         echo json_encode($output);
+//     }
+//     public function suakhachdatban(Request $request)
+//     {
+//         $id = $request->input('id');
+//         $student = Khachdatban::find($id);
+//         $output = array(
+//             'ten'    =>  $student->ten,
+//             'sdt'     =>  $student->sdt,
+//             'id_cuahang'    =>  $student->id_cuahang,
+//             'thoigian'    =>  $student->thoigian,
+//             'gio'    =>  $student->gio,
+//             'buoi'    =>  $student->buoi,
+//             'songuoi'    =>  $student->songuoi,
+//             'trangthai'    =>  $student->trangthai,
+//             'ghichu'    =>  $student->ghichu,
+//         );
+//         echo json_encode($output);
+//     }
+//     public function xoakhachdatban(Request $request)
+//     {
+//         $student = Khachdatban::find($request->input('id'));
+//         if($student->delete())
+//         {
+//             echo 'Data Deleted';
+//         }
+    // }
 //KHÔNG DÙNG NỮA
     // Danh sách nhân viên
     // public function nhanvien()
@@ -443,168 +443,168 @@ class MyController extends Controller
     // }
 //HÀNG HÓA
 // Hàng hóa
-    public function hanghoa()
-    {
-        $iduser = intval(Auth::User()->quyen);
-        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
-        $hanghoa= hanghoa::groupBy(['id'],['ma'])->get();
-        return view('hanghoa',['hanghoa'=>$hanghoa,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
-    }
+//     public function hanghoa()
+//     {
+//         $iduser = intval(Auth::User()->quyen);
+//         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+//         $hanghoa= hanghoa::groupBy(['id'],['ma'])->get();
+//         return view('hanghoa',['hanghoa'=>$hanghoa,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
+//     }
    
-// Thêm hàng hóa
-    public function getthemhh()
-    {
-        return view('themhh');
-    }
-    public function postthemhh(Request $request)
-    {
-        $this->validate($request,[
-            'Ten'=>'required|min:3'
-            ],[
-            'Ten.required'=>'Vui lòng nhập tên',
-            'Ten.min'=>'Tên nhân viên phải có ít nhất 3 kí tự'
-            ]);
-    $hanghoa = new hanghoa;
-    $hanghoa->ma= $request->ma;
-    $hanghoa->Ten= $request->Ten;
-    $hanghoa->DVTinh= $request->DVTinh;
-    $hanghoa->dongia= $request->dongia;
-    $hanghoa->save();
+// // Thêm hàng hóa
+//     public function getthemhh()
+//     {
+//         return view('themhh');
+//     }
+//     public function postthemhh(Request $request)
+//     {
+//         $this->validate($request,[
+//             'Ten'=>'required|min:3'
+//             ],[
+//             'Ten.required'=>'Vui lòng nhập tên',
+//             'Ten.min'=>'Tên nhân viên phải có ít nhất 3 kí tự'
+//             ]);
+//     $hanghoa = new hanghoa;
+//     $hanghoa->ma= $request->ma;
+//     $hanghoa->Ten= $request->Ten;
+//     $hanghoa->DVTinh= $request->DVTinh;
+//     $hanghoa->dongia= $request->dongia;
+//     $hanghoa->save();
 
-    echo"<script>
-    alert('Thêm hàng hóa thành công!');
-    window.location = ' ".url('hanghoa')."'
-    </script>";
-    }
-// Sửa hàng hóa
-    public function getsuahh($id)
-    {
-        $hanghoa= hanghoa::find($id);
-        return view('suahh',['hanghoa'=>$hanghoa]);
-    }
-    public function postsuahh(Request $request,$id)
-    {
-        $this->validate($request,[
-            'Ten'=>'required'
-            ],[
-            'Ten'=>'Vui lòng nhập tên',
+//     echo"<script>
+//     alert('Thêm hàng hóa thành công!');
+//     window.location = ' ".url('hanghoa')."'
+//     </script>";
+//     }
+// // Sửa hàng hóa
+//     public function getsuahh($id)
+//     {
+//         $hanghoa= hanghoa::find($id);
+//         return view('suahh',['hanghoa'=>$hanghoa]);
+//     }
+//     public function postsuahh(Request $request,$id)
+//     {
+//         $this->validate($request,[
+//             'Ten'=>'required'
+//             ],[
+//             'Ten'=>'Vui lòng nhập tên',
             
-            ]);
-    $hanghoa = hanghoa::find($id);
-    $hanghoa->ma= $request->ma;
-    $hanghoa->Ten= $request->Ten;
-    $hanghoa->DVTinh= $request->DVTinh;
-    $hanghoa->save();
-    echo"<script>
-        alert('Sửa hàng hóa thành công!');
-        window.location = ' ".url('hanghoa')."'
-        </script>";
-    }
-// Xóa hàng hóa
-    public function getxoahh($id)
-    {
-        $hanghoa = hanghoa::find($id);
-        $hanghoa->delete();
+//             ]);
+//     $hanghoa = hanghoa::find($id);
+//     $hanghoa->ma= $request->ma;
+//     $hanghoa->Ten= $request->Ten;
+//     $hanghoa->DVTinh= $request->DVTinh;
+//     $hanghoa->save();
+//     echo"<script>
+//         alert('Sửa hàng hóa thành công!');
+//         window.location = ' ".url('hanghoa')."'
+//         </script>";
+//     }
+// // Xóa hàng hóa
+//     public function getxoahh($id)
+//     {
+//         $hanghoa = hanghoa::find($id);
+//         $hanghoa->delete();
 
-        echo"<script>
-        alert('Xóa hàng hóa thành công!');
-        window.location = ' ".url('hanghoa')."'
-        </script>";
-    }
-//BÌNH LUẬN
-//Bình luận
-    public function binhluan()
-    {
-        $iduser = intval(Auth::User()->quyen);
-        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
-        $hanghoa= Review::all();
-        return view('binhluan',['hanghoa'=>$hanghoa,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
-    }
-// Xóa bình luận
-    public function getxoabinhluan($id)
-    {
-        $hanghoa = Review::find($id);
-        $hanghoa->delete();
-        echo"<script>
-        alert('Xóa thành công!');
-        window.location = ' ".url('binhluan')."'
-        </script>";
-    }
+//         echo"<script>
+//         alert('Xóa hàng hóa thành công!');
+//         window.location = ' ".url('hanghoa')."'
+//         </script>";
+//     }
+// //BÌNH LUẬN
+// //Bình luận
+//     public function binhluan()
+//     {
+//         $iduser = intval(Auth::User()->quyen);
+//         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+//         $hanghoa= Review::all();
+//         return view('binhluan',['hanghoa'=>$hanghoa,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
+//     }
+// // Xóa bình luận
+//     public function getxoabinhluan($id)
+//     {
+//         $hanghoa = Review::find($id);
+//         $hanghoa->delete();
+//         echo"<script>
+//         alert('Xóa thành công!');
+//         window.location = ' ".url('binhluan')."'
+//         </script>";
+//     }
 //CƠ SỞ KHÁC
 //Danh sách cơ sở
-    public function coso()
-    {
-        $iduser = intval(Auth::User()->quyen);
-        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
-        $coso= cuahang::all();
-        return view('coso',['coso'=>$coso,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
-    }
-// Thêm cơ sở
-    public function getthemcs()
-    {
-        return view('themcs');
-    }
-    public function postthemcs(Request $request)
-    {
-        $this->validate($request,[
-            'TenCH'=>'required|min:3'
-            ],[
-            'TenCH.required'=>'Vui lòng nhập tên',
-            'TenCH.min'=>'Tên nhân viên phải có ít nhất 3 kí tự'
-            ]);
-    $coso = new cuahang;
-    $coso->MaCH= $request->MaCH;
-    $coso->TenCH= $request->TenCH;
-    $coso->SDT= $request->SDT;
-    $coso->TenQL= $request->TenQL;
-    $coso->DiaChi= $request->DiaChi;
-    $coso->hienthi = $request->hienthi;
-    $coso->lienket = 1;
-    $coso->save();
+//     public function coso()
+//     {
+//         $iduser = intval(Auth::User()->quyen);
+//         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+//         $coso= cuahang::all();
+//         return view('coso',['coso'=>$coso,'iduser'=>$iduser,'xem_ac'=>$xem_ac]);
+//     }
+// // Thêm cơ sở
+//     public function getthemcs()
+//     {
+//         return view('themcs');
+//     }
+//     public function postthemcs(Request $request)
+//     {
+//         $this->validate($request,[
+//             'TenCH'=>'required|min:3'
+//             ],[
+//             'TenCH.required'=>'Vui lòng nhập tên',
+//             'TenCH.min'=>'Tên nhân viên phải có ít nhất 3 kí tự'
+//             ]);
+//     $coso = new cuahang;
+//     $coso->MaCH= $request->MaCH;
+//     $coso->TenCH= $request->TenCH;
+//     $coso->SDT= $request->SDT;
+//     $coso->TenQL= $request->TenQL;
+//     $coso->DiaChi= $request->DiaChi;
+//     $coso->hienthi = $request->hienthi;
+//     $coso->lienket = 1;
+//     $coso->save();
 
-    echo"<script>
-        alert('Thêm cơ sở thành công!');
-        window.location = ' ".url('coso')."'
-        </script>";
-    } 
-// Sửa cơ sở
-    public function getsuacs($id)
-    {
-        $coso= cuahang::find($id);
-        return view('suacs',['coso'=>$coso]);
-    }
-    public function postsuacs(Request $request,$id)
-    {
-        $this->validate($request,[
-            'TenCH'=>'required'
-            ],[
-            'TenCH'=>'Vui lòng nhập tên',
+//     echo"<script>
+//         alert('Thêm cơ sở thành công!');
+//         window.location = ' ".url('coso')."'
+//         </script>";
+//     } 
+// // Sửa cơ sở
+//     public function getsuacs($id)
+//     {
+//         $coso= cuahang::find($id);
+//         return view('suacs',['coso'=>$coso]);
+//     }
+//     public function postsuacs(Request $request,$id)
+//     {
+//         $this->validate($request,[
+//             'TenCH'=>'required'
+//             ],[
+//             'TenCH'=>'Vui lòng nhập tên',
             
-            ]);
-    $coso = cuahang::find($id);
-    $coso->MaCH= $request->MaCH;
-    $coso->TenCH= $request->TenCH;
-    $coso->SDT= $request->SDT;
-    $coso->TenQL= $request->TenQL;
-    $coso->DiaChi= $request->DiaChi;
-    $coso->hienthi= $request->hienthi;
-    $coso->save();
-    echo"<script>
-    alert('Sửa cơ sở thành công!');
-    window.location = ' ".url('coso')."'
-    </script>";
-    }
-// Xóa cơ sở
-    public function getxoacs($id)
-    {
-        $coso = cuahang::find($id);
-        $coso->delete();
+//             ]);
+//     $coso = cuahang::find($id);
+//     $coso->MaCH= $request->MaCH;
+//     $coso->TenCH= $request->TenCH;
+//     $coso->SDT= $request->SDT;
+//     $coso->TenQL= $request->TenQL;
+//     $coso->DiaChi= $request->DiaChi;
+//     $coso->hienthi= $request->hienthi;
+//     $coso->save();
+//     echo"<script>
+//     alert('Sửa cơ sở thành công!');
+//     window.location = ' ".url('coso')."'
+//     </script>";
+//     }
+// // Xóa cơ sở
+//     public function getxoacs($id)
+//     {
+//         $coso = cuahang::find($id);
+//         $coso->delete();
 
-        echo"<script>
-        alert('Xóa cơ sở thành công!');
-        window.location = ' ".url('coso')."'
-        </script>";
-    }
+//         echo"<script>
+//         alert('Xóa cơ sở thành công!');
+//         window.location = ' ".url('coso')."'
+//         </script>";
+//     }
 //TIN TỨC
 // Danh sách tin tức
     public function tintuc()
@@ -695,169 +695,169 @@ class MyController extends Controller
     window.location = ' ".url('tintuc')."'
     </script>";
     }
-//HÓA ĐƠN
-// Hóa đơn bán
-    public function hoadonban()
-    {
-    $hoadonban= hdban::all();
-    return view('hoadonban',compact('hoadonban'));
-    }
-// Hóa đơn bán online
-    public function hoadonbanonline()
-    {
-    $hoadonban= bill::all();
-    return view('hoadonbanonline',compact('hoadonban'));
-    }
-// Hóa đơn bán ngày
-    public function hdbanngay(Request $request)
-    {   
-        $product = hdban::where('Ngay','=',$request->Ngay)->get();
-        return view('hdbanngay',['product'=>$product]);
-    }
-// Hóa đơn bán online ngày
-    public function hdbanonlinengay(Request $request)
-    {   
-        $product = bill::where('ngay','=',$request->ngay)->get();
-        return view('hdbanonlinengay',['product'=>$product]);
-    }
-//CHI TIẾT HÓA ĐƠN
-//Chi tiết hóa đơn bán
-    public function cthdban($id)
-    {
-    $monan= monan::where('spdg',0)->get();
-    $hoadonban= hdban::all();
-    $hoadonban= hdban::find($id);
-    $cthdban= cthdban::where('id_hoadonban', '=',$id)->get();
-    return view('cthdban',['cthdban'=>$cthdban,'hoadonban'=>$hoadonban,'monan'=>$monan]);
-    }
-//Thêm món ăn vào hóa đơn
-    public function postcthdban(Request $request, $id)
-    {
-        $monan= monan::all();
-        $monan = monan::where('id',$request->id_monan)->get();
-        $tenmonan= $request->id_monan;
+// //HÓA ĐƠN
+// // Hóa đơn bán
+//     public function hoadonban()
+//     {
+//     $hoadonban= hdban::all();
+//     return view('hoadonban',compact('hoadonban'));
+//     }
+// // Hóa đơn bán online
+//     public function hoadonbanonline()
+//     {
+//     $hoadonban= bill::all();
+//     return view('hoadonbanonline',compact('hoadonban'));
+//     }
+// // Hóa đơn bán ngày
+//     public function hdbanngay(Request $request)
+//     {   
+//         $product = hdban::where('Ngay','=',$request->Ngay)->get();
+//         return view('hdbanngay',['product'=>$product]);
+//     }
+// // Hóa đơn bán online ngày
+//     public function hdbanonlinengay(Request $request)
+//     {   
+//         $product = bill::where('ngay','=',$request->ngay)->get();
+//         return view('hdbanonlinengay',['product'=>$product]);
+//     }
+// //CHI TIẾT HÓA ĐƠN
+// //Chi tiết hóa đơn bán
+//     public function cthdban($id)
+//     {
+//     $monan= monan::where('spdg',0)->get();
+//     $hoadonban= hdban::all();
+//     $hoadonban= hdban::find($id);
+//     $cthdban= cthdban::where('id_hoadonban', '=',$id)->get();
+//     return view('cthdban',['cthdban'=>$cthdban,'hoadonban'=>$hoadonban,'monan'=>$monan]);
+//     }
+// //Thêm món ăn vào hóa đơn
+//     public function postcthdban(Request $request, $id)
+//     {
+//         $monan= monan::all();
+//         $monan = monan::where('id',$request->id_monan)->get();
+//         $tenmonan= $request->id_monan;
        
-        $dongia= $monan[0]->dongia;
-        $cthdban = new cthdban;
-        $cthdban->id_hoadonban= $request->id_hoadonban;
-        $cthdban->id_monan= $request->id_monan;
-        $cthdban->SoLuong= $request->SoLuong;
-        $soluong= $request->SoLuong;
+//         $dongia= $monan[0]->dongia;
+//         $cthdban = new cthdban;
+//         $cthdban->id_hoadonban= $request->id_hoadonban;
+//         $cthdban->id_monan= $request->id_monan;
+//         $cthdban->SoLuong= $request->SoLuong;
+//         $soluong= $request->SoLuong;
 
-        $cthdban->Dongia = $dongia;
-        $cthdban->TongTien = $soluong * $dongia;
-        $cthdban ->Ngay = date('Y-m-d'); 
+//         $cthdban->Dongia = $dongia;
+//         $cthdban->TongTien = $soluong * $dongia;
+//         $cthdban ->Ngay = date('Y-m-d'); 
 
-        $thanhtien = $request->ThanhTien;
-        $tong = $thanhtien + $soluong * $dongia;
+//         $thanhtien = $request->ThanhTien;
+//         $tong = $thanhtien + $soluong * $dongia;
        
-        $hdban= hdban::all();
-        $hdban = $request->id_hoadonban;
-        DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
-            ->where('hdban.id',$hdban)
-            ->update(['ThanhTien' => $tong]);                
+//         $hdban= hdban::all();
+//         $hdban = $request->id_hoadonban;
+//         DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
+//             ->where('hdban.id',$hdban)
+//             ->update(['ThanhTien' => $tong]);                
 
-        $cthdban->save();  
+//         $cthdban->save();  
         
-        return back();
-    }
+//         return back();
+//     }
 
-//Sửa chi tiết hóa đơn
-    public function getsuacthdban($id)
-    {
-        $cthdban= cthdban::find($id);
-        return view('suacthdban',compact('cthdban'));
-    }
-    public function postsuacthdban(Request $request,$id)
-    {
-    $cthdban = cthdban::find($id);
-    $soluong= $request->SoLuong;
-    if($soluong!=0){
-    $dongia= $request->Dongia;
-    $tong= $soluong * $dongia;
-    DB::table('cthdban')->where('cthdban.id',$id)
-    ->update(['TongTien'=> $tong]);
-    DB::table('cthdban')->where('cthdban.id',$id)
-    ->update(['SoLuong'=> $soluong]);
+// //Sửa chi tiết hóa đơn
+//     public function getsuacthdban($id)
+//     {
+//         $cthdban= cthdban::find($id);
+//         return view('suacthdban',compact('cthdban'));
+//     }
+//     public function postsuacthdban(Request $request,$id)
+//     {
+//     $cthdban = cthdban::find($id);
+//     $soluong= $request->SoLuong;
+//     if($soluong!=0){
+//     $dongia= $request->Dongia;
+//     $tong= $soluong * $dongia;
+//     DB::table('cthdban')->where('cthdban.id',$id)
+//     ->update(['TongTien'=> $tong]);
+//     DB::table('cthdban')->where('cthdban.id',$id)
+//     ->update(['SoLuong'=> $soluong]);
 
-    $tongtien = $request->TongTien;
-    $total= $request->ThanhTien;
-    $sum= $total - $tongtien + $soluong * $dongia ;
-    $hdban= hdban::all();
-    $hdban = $request->id_hoadon;
+//     $tongtien = $request->TongTien;
+//     $total= $request->ThanhTien;
+//     $sum= $total - $tongtien + $soluong * $dongia ;
+//     $hdban= hdban::all();
+//     $hdban = $request->id_hoadon;
 
-    DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
-        ->where('hdban.id',$hdban)
-        ->update(['ThanhTien' => $sum]);   
+//     DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
+//         ->where('hdban.id',$hdban)
+//         ->update(['ThanhTien' => $sum]);   
 
-    return redirect('hoadonban');
-    }
-    else{
-        return redirect()->back()->with('thongbao','Số lượng không thể bằng 0!');
-    }
-    }
-// Xóa chi tiết hóa đơn
-    public function getxoacthdban($id)
-    {
-    $cthdban= cthdban::find($id)->get();
-    $id_hoadonban = cthdban::find($id)->id_hoadonban;
-    $cthdb= cthdban::find($id);
-    $tongtien= $cthdb->TongTien;
-    $thanhtien=  DB::table('cthdban')
-                ->where('cthdban.id_hoadonban',$id_hoadonban)
-                ->sum('TongTien');  
+//     return redirect('hoadonban');
+//     }
+//     else{
+//         return redirect()->back()->with('thongbao','Số lượng không thể bằng 0!');
+//     }
+//     }
+// // Xóa chi tiết hóa đơn
+//     public function getxoacthdban($id)
+//     {
+//     $cthdban= cthdban::find($id)->get();
+//     $id_hoadonban = cthdban::find($id)->id_hoadonban;
+//     $cthdb= cthdban::find($id);
+//     $tongtien= $cthdb->TongTien;
+//     $thanhtien=  DB::table('cthdban')
+//                 ->where('cthdban.id_hoadonban',$id_hoadonban)
+//                 ->sum('TongTien');  
                 
-    $tong= $thanhtien - $tongtien;
-    $dem=DB::table('cthdban')
-    ->where('cthdban.id_hoadonban',$id_hoadonban)
-    ->count('id_hoadonban');
+//     $tong= $thanhtien - $tongtien;
+//     $dem=DB::table('cthdban')
+//     ->where('cthdban.id_hoadonban',$id_hoadonban)
+//     ->count('id_hoadonban');
 
-    if($dem ==1){
-    return redirect()->back();
-    }
-    else{
-        DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
-        ->where('hdban.id',$id_hoadonban)
-        ->update(['ThanhTien' => $tong]); 
-        $cthdb->delete();
-    }
-    return back();
-    }
-// Xóa hóa đơn
-    public function getxoahdban($id)
-    {
-        $hdban = hdban::find($id);
-        $cthdban= cthdban::where('id_hoadonban', '=',$id);
-        $hdban-> delete();
-        $cthdban-> delete();
-        return back();
-    }
-//Thanh toán offline
-    public function getthanhtoanoff($id)
-    {
-    $monan= monan::where('spdg',0)->get();
-    $hoadonban= hdban::all();
-    $hoadonban= hdban::find($id);
-    $cthdban= cthdban::where('id_hoadonban', '=',$id)->get();
-    return view('thanhtoanoff',['cthdban'=>$cthdban,'hoadonban'=>$hoadonban,'monan'=>$monan]);
-    }
-    public function postthanhtoanoff(Request $request,$id)
-    {
-        $hdban = $request->id_hoadonban;
-        $khachtra= $request->Khachtra;
-        $tongtien = $request->ThanhTien;
-        $tralai = $khachtra -  $tongtien;
-        DB::table('hdban')
-            ->where('hdban.id',$hdban)
-            ->update(['Khachtra' => $khachtra]);
-        DB::table('hdban')
-            ->where('hdban.id',$hdban)
-            ->update(['Tralai' => $tralai]);
-        DB::table('hdban')
-            ->where('hdban.id',$hdban)
-            ->update(['trangthai' => 1]);
-        return redirect('hoadonban');
-    }
+//     if($dem ==1){
+//     return redirect()->back();
+//     }
+//     else{
+//         DB::table('hdban')->join('cthdban', 'hdban.id','=','cthdban.id_hoadonban')
+//         ->where('hdban.id',$id_hoadonban)
+//         ->update(['ThanhTien' => $tong]); 
+//         $cthdb->delete();
+//     }
+//     return back();
+//     }
+// // Xóa hóa đơn
+//     public function getxoahdban($id)
+//     {
+//         $hdban = hdban::find($id);
+//         $cthdban= cthdban::where('id_hoadonban', '=',$id);
+//         $hdban-> delete();
+//         $cthdban-> delete();
+//         return back();
+//     }
+// //Thanh toán offline
+//     public function getthanhtoanoff($id)
+//     {
+//     $monan= monan::where('spdg',0)->get();
+//     $hoadonban= hdban::all();
+//     $hoadonban= hdban::find($id);
+//     $cthdban= cthdban::where('id_hoadonban', '=',$id)->get();
+//     return view('thanhtoanoff',['cthdban'=>$cthdban,'hoadonban'=>$hoadonban,'monan'=>$monan]);
+//     }
+//     public function postthanhtoanoff(Request $request,$id)
+//     {
+//         $hdban = $request->id_hoadonban;
+//         $khachtra= $request->Khachtra;
+//         $tongtien = $request->ThanhTien;
+//         $tralai = $khachtra -  $tongtien;
+//         DB::table('hdban')
+//             ->where('hdban.id',$hdban)
+//             ->update(['Khachtra' => $khachtra]);
+//         DB::table('hdban')
+//             ->where('hdban.id',$hdban)
+//             ->update(['Tralai' => $tralai]);
+//         DB::table('hdban')
+//             ->where('hdban.id',$hdban)
+//             ->update(['trangthai' => 1]);
+//         return redirect('hoadonban');
+//     }
 //Chi tiết hóa đơn bán online
     public function cthdbanonline($id)
     {
@@ -1380,7 +1380,7 @@ class MyController extends Controller
 
 
 
-//KHÔNG DÙNG NỮA
+// KHÔNG DÙNG NỮA
 //Thêm hàng hóa vào giỏ hàng hóa
     public function nhaphang( Request $request,$id)
     {   
@@ -1451,31 +1451,29 @@ class MyController extends Controller
 
     }
 
-//GIỎ HÀNG, HÓA ĐƠN
-//Giỏ hàng hóa trống
-    public function giohanghoatrong()
-    {
-    return view('giohanghoatrong');  
-    }
-//Đặt hàng thành công
-    public function themhhthanhcong()
-    {
-    return view('themhhthanhcong');  
-    }
-//Xuất hàng thành công
-    public function xuathhthanhcong()
-    {
-    return view('xuathhthanhcong');  
-    }
-//Tìm kiếm hàng hóa
-    public function searchhh(Request $request)
-    {
-        $product = hanghoa::where('ma','like','%'.$request->key.'%')->get();
+// //GIỎ HÀNG, HÓA ĐƠN
+// //Giỏ hàng hóa trống
+//     public function giohanghoatrong()
+//     {
+//     return view('giohanghoatrong');  
+//     }
+// //Đặt hàng thành công
+//     public function themhhthanhcong()
+//     {
+//     return view('themhhthanhcong');  
+//     }
+// //Xuất hàng thành công
+//     public function xuathhthanhcong()
+//     {
+//     return view('xuathhthanhcong');  
+//     }
+// //Tìm kiếm hàng hóa
+//     public function searchhh(Request $request)
+//     {
+//         $product = hanghoa::where('ma','like','%'.$request->key.'%')->get();
 
-        return view('searchhh',compact('product'));
-    }
-
-
+//         return view('searchhh',compact('product'));
+//     }
 
 
 
@@ -1483,52 +1481,54 @@ class MyController extends Controller
 
 
 
-//Phiếu nhập
-    public function phieunhap()
-    {
-    $phieunhap= phieunhap::all();
-    return view('phieunhap',compact('phieunhap'));
-    }
-//Phiếu nhập ngày
-    public function phieunhapngay(Request $request)
-    {   
-        $product = phieunhap::where('Ngay','=',$request->Ngay)->get();
-        return view('phieunhapngay',['product'=>$product]);
-    }
+
+
+// //Phiếu nhập
+//     public function phieunhap()
+//     {
+//     $phieunhap= phieunhap::all();
+//     return view('phieunhap',compact('phieunhap'));
+//     }
+// //Phiếu nhập ngày
+//     public function phieunhapngay(Request $request)
+//     {   
+//         $product = phieunhap::where('Ngay','=',$request->Ngay)->get();
+//         return view('phieunhapngay',['product'=>$product]);
+//     }
 
 
 
 
-//Chi tiết phiếu nhập
-    public function ctpnhap($id)
-    {
-    $phieunhap= phieunhap::find($id);
-    $ctpnhap= ctpnhap::all();
-    $ctpnhap= ctpnhap::find($id);
-    $ctpnhap= ctpnhap::where('id_phieunhap','=',$id)->get();
-    return view('ctpnhap',['ctpnhap'=>$ctpnhap,'phieunhap'=>$phieunhap]);
-    }
-//Phiếu xuất
-    public function phieuxuat()
-    {
-    $phieuxuat= phieuxuat::all();
-    return view('phieuxuat',['phieuxuat'=>$phieuxuat]);
-    }
-//Phiếu xuất ngày
-    public function phieuxuatngay(Request $request)
-    {   
-        $product = phieuxuat::where('Ngay','=',$request->Ngay)->get();
-        return view('phieuxuatngay',['product'=>$product]);
-    }
-//Chi tiết phiếu xuất
-    public function ctpxuat($id)
-    {
-    $phieuxuat= phieuxuat::find($id);
-    $ctpxuat= ctpxuat::all();
-    $ctpxuat= ctpxuat::find($id);
-    $ctpxuat= ctpxuat::where('id_phieuxuat','=',$id)->get();
-    return view('ctpxuat',['ctpxuat'=>$ctpxuat,'phieuxuat'=>$phieuxuat]);
-    }
+// //Chi tiết phiếu nhập
+//     public function ctpnhap($id)
+//     {
+//     $phieunhap= phieunhap::find($id);
+//     $ctpnhap= ctpnhap::all();
+//     $ctpnhap= ctpnhap::find($id);
+//     $ctpnhap= ctpnhap::where('id_phieunhap','=',$id)->get();
+//     return view('ctpnhap',['ctpnhap'=>$ctpnhap,'phieunhap'=>$phieunhap]);
+//     }
+// //Phiếu xuất
+//     public function phieuxuat()
+//     {
+//     $phieuxuat= phieuxuat::all();
+//     return view('phieuxuat',['phieuxuat'=>$phieuxuat]);
+//     }
+// //Phiếu xuất ngày
+//     public function phieuxuatngay(Request $request)
+//     {   
+//         $product = phieuxuat::where('Ngay','=',$request->Ngay)->get();
+//         return view('phieuxuatngay',['product'=>$product]);
+//     }
+// //Chi tiết phiếu xuất
+//     public function ctpxuat($id)
+//     {
+//     $phieuxuat= phieuxuat::find($id);
+//     $ctpxuat= ctpxuat::all();
+//     $ctpxuat= ctpxuat::find($id);
+//     $ctpxuat= ctpxuat::where('id_phieuxuat','=',$id)->get();
+//     return view('ctpxuat',['ctpxuat'=>$ctpxuat,'phieuxuat'=>$phieuxuat]);
+//     }
 
 
 
@@ -1977,285 +1977,285 @@ class MyController extends Controller
         });
         })  ->download('xlsx');
     }
-//Hàng khô
-    public function hangkho()
-    {
-        $hang=hanghoa::where('ma','like','%2%')->orwhere('ma','like','%3%')->orwhere('ma','like','%5%')->get();
-        return view('hangkho',compact('hang'));
-    }
-//Excel khô
-    public function excelkho()
-    {
-        $hang_data=DB::table('hanghoa')->where('ma','like','%2%')->orwhere('ma','like','%3%')->orwhere('ma','like','%5%')->get()->toArray();
-        $hang_array[]= array('MãHH','Tên','Tồn ĐT','Nhập','Xuất','Số lượng dùng','Tồn CT','Hủy','Còn lại','ĐV tính');
-        foreach($hang_data as $hang)
-        {
-            $hang_array[] = array(
-                'MãHH'=>$hang->ma,
-                'Tên'=>$hang->Ten,
-                'Tồn ĐT'=>$hang->TonDC,
-                'Nhập'=>$hang->Nhap,
-                'Xuất'=>$hang->Xuat,
-                'Số lượng dùng'=>$hang->SoLuong,
-                'Tồn CT'=>$hang->Ton,
-                'Hủy'=>$hang->Huy,
-                'Còn lại'=>$hang->DeLai,'ĐV tính'=>$hang->DVTinh);
-        }
-        $time= date("Y-m-d",time()).'_Hangkho';
-        Excel::create($time, function($excel) use ($hang_array)
-        {
-        $excel->setTitle('Hangkho');
-        $excel->sheet('Hangkho',function($sheet) use ($hang_array)
-        {
-            $sheet->fromArray($hang_array,null,'A1',false,false);
-            $sheet->setStyle(array(
-                'font' => array(
-                    'name'      =>  'Calibri',
-                    'size'      =>  12,
-                    'bold'      =>  false,
-                    'borders'    =>  true
-                )
-            )
-                );
-                $sheet->cell('A1:J1', function($cell) {
+// //Hàng khô
+//     public function hangkho()
+//     {
+//         $hang=hanghoa::where('ma','like','%2%')->orwhere('ma','like','%3%')->orwhere('ma','like','%5%')->get();
+//         return view('hangkho',compact('hang'));
+//     }
+// //Excel khô
+//     public function excelkho()
+//     {
+//         $hang_data=DB::table('hanghoa')->where('ma','like','%2%')->orwhere('ma','like','%3%')->orwhere('ma','like','%5%')->get()->toArray();
+//         $hang_array[]= array('MãHH','Tên','Tồn ĐT','Nhập','Xuất','Số lượng dùng','Tồn CT','Hủy','Còn lại','ĐV tính');
+//         foreach($hang_data as $hang)
+//         {
+//             $hang_array[] = array(
+//                 'MãHH'=>$hang->ma,
+//                 'Tên'=>$hang->Ten,
+//                 'Tồn ĐT'=>$hang->TonDC,
+//                 'Nhập'=>$hang->Nhap,
+//                 'Xuất'=>$hang->Xuat,
+//                 'Số lượng dùng'=>$hang->SoLuong,
+//                 'Tồn CT'=>$hang->Ton,
+//                 'Hủy'=>$hang->Huy,
+//                 'Còn lại'=>$hang->DeLai,'ĐV tính'=>$hang->DVTinh);
+//         }
+//         $time= date("Y-m-d",time()).'_Hangkho';
+//         Excel::create($time, function($excel) use ($hang_array)
+//         {
+//         $excel->setTitle('Hangkho');
+//         $excel->sheet('Hangkho',function($sheet) use ($hang_array)
+//         {
+//             $sheet->fromArray($hang_array,null,'A1',false,false);
+//             $sheet->setStyle(array(
+//                 'font' => array(
+//                     'name'      =>  'Calibri',
+//                     'size'      =>  12,
+//                     'bold'      =>  false,
+//                     'borders'    =>  true
+//                 )
+//             )
+//                 );
+//                 $sheet->cell('A1:J1', function($cell) {
 
-                    // Set black background
-                    $cell->setBackground('#66CCFF');
+//                     // Set black background
+//                     $cell->setBackground('#66CCFF');
             
-                    // Set font
-                    $cell->setFont([
-                        'family'     => 'Calibri',
-                        'size'       => '12',
-                        'bold'       =>  false,
-                        'borders'    =>  true
-                    ]);
+//                     // Set font
+//                     $cell->setFont([
+//                         'family'     => 'Calibri',
+//                         'size'       => '12',
+//                         'bold'       =>  false,
+//                         'borders'    =>  true
+//                     ]);
             
-                    // Set all borders (top, right, bottom, left)
-                    $cell->setBorder('solid', 'solid', 'solid', 'solid');
+//                     // Set all borders (top, right, bottom, left)
+//                     $cell->setBorder('solid', 'solid', 'solid', 'solid');
             
-                });
-                $sheet->cell('A2:A34', function($cell) {
+//                 });
+//                 $sheet->cell('A2:A34', function($cell) {
 
-                    // Set black background
-                    $cell->setBackground('#FF9900');
-                });
+//                     // Set black background
+//                     $cell->setBackground('#FF9900');
+//                 });
         
-        });
-        })  ->download('xlsx');
-    }
+//         });
+//         })  ->download('xlsx');
+//     }
 
-//Báo cáo hàng tồn 
-    public function baocaohangton()
-    {
-    $products= hanghoa::all();
-    return view('baocaohangton',compact('products'));
-    }
-//Get giỏ báo cáo hàng tồn
-    public function getgiobchangton()
-    {
-    return view('giobchangton');
-    }
-//Post giỏ báo cáo hàng tồn
-    public function postgiobchangton()
-    {   
-        $cart = session()->get('cart');
-        foreach ($cart as $key => $value) {
-            $hanghoa = hanghoa::find($key);
-            $hanghoa->Ngay = date('Y-m-d');
-            $hanghoa->SoLuong -= $value['quantity'];
-            $hanghoa->Ton += $value['quantity'];
-            $hanghoa->DeLai += $value['quantity'];
-            $hanghoa->save();
-        } 
-    session()->forget('cart');
-    return redirect('xuathhthanhcong');
+// //Báo cáo hàng tồn 
+//     public function baocaohangton()
+//     {
+//     $products= hanghoa::all();
+//     return view('baocaohangton',compact('products'));
+//     }
+// //Get giỏ báo cáo hàng tồn
+//     public function getgiobchangton()
+//     {
+//     return view('giobchangton');
+//     }
+// //Post giỏ báo cáo hàng tồn
+//     public function postgiobchangton()
+//     {   
+//         $cart = session()->get('cart');
+//         foreach ($cart as $key => $value) {
+//             $hanghoa = hanghoa::find($key);
+//             $hanghoa->Ngay = date('Y-m-d');
+//             $hanghoa->SoLuong -= $value['quantity'];
+//             $hanghoa->Ton += $value['quantity'];
+//             $hanghoa->DeLai += $value['quantity'];
+//             $hanghoa->save();
+//         } 
+//     session()->forget('cart');
+//     return redirect('xuathhthanhcong');
 
-    }
-//Thêm báo cáo hàng tồn (Addtocart)
-    public function thembaocaohangton($id)
-    {
-        $product = hanghoa::find($id);
+//     }
+// //Thêm báo cáo hàng tồn (Addtocart)
+//     public function thembaocaohangton($id)
+//     {
+//         $product = hanghoa::find($id);
 
-        if(!$product)
-        {
-            abort(404);
-        }
-        $cart = session()->get('cart');
-        // if cart is empty then this the first product
-        if(!$cart) {
-        $cart = [
-            $id => [
-                    "name" => $product->Ten,
-                    "quantity" => 1,
-                    "DVTinh"=> $product->DVTinh,
-                    "id_hanghoa"=> $product->id_hanghoa
-                    ]
-                ];
-        session()->put('cart', $cart);
-        return redirect()->back()->with('thongbao', 'Thành công!');
-        } 
-        // if cart not empty then check if this product exist then increment quantity
-        if(isset($cart[$id])) {
+//         if(!$product)
+//         {
+//             abort(404);
+//         }
+//         $cart = session()->get('cart');
+//         // if cart is empty then this the first product
+//         if(!$cart) {
+//         $cart = [
+//             $id => [
+//                     "name" => $product->Ten,
+//                     "quantity" => 1,
+//                     "DVTinh"=> $product->DVTinh,
+//                     "id_hanghoa"=> $product->id_hanghoa
+//                     ]
+//                 ];
+//         session()->put('cart', $cart);
+//         return redirect()->back()->with('thongbao', 'Thành công!');
+//         } 
+//         // if cart not empty then check if this product exist then increment quantity
+//         if(isset($cart[$id])) {
 
-            $cart[$id]['quantity']++;
+//             $cart[$id]['quantity']++;
 
-            session()->put('cart', $cart);
+//             session()->put('cart', $cart);
 
-            return redirect()->back()->with('thongbao', 'Thành công!');
-        }
-        // if item not exist in cart then add to cart with quantity = 1
-        $cart[$id] = [
-            "name" => $product->Ten,
-            "quantity" => 1,
-            "DVTinh"=> $product->DVTinh,
-            "id_hanghoa"=> $product->id_hanghoa
-        ];
-        session()->put('cart', $cart);
-        return redirect()->back()->with('thongbao', 'Thành công!');
-    }
-
-
-
-//Báo cáo hàng tồn đầu ca
-    public function baocaohangtondc()
-    {
-    $products= hanghoa::all();
-    return view('baocaohangtondc',compact('products'));
-    }
-//Get giỏ báo cáo hàng tồn đầu ca
-    public function getgiobchangtondc()
-    {
-    return view('giobchangtondc');
-    }
-//Post giỏ báo cáo hàng tồn đầu ca
-    public function postgiobchangtondc()
-    {   
-    $cart = session()->get('cart');
-    foreach ($cart as $key => $value) {
-        $hanghoa = hanghoa::find($key);
-        $hanghoa->SoLuong += $value['quantity'];
-        $hanghoa->TonDC += $value['quantity'];
-        $hanghoa->save();
-    } 
-    session()->forget('cart');
-    return redirect('xuathhthanhcong');
-
-    }
-//Thêm báo cáo hàng tồn đầu ca(Addtocart)
-    public function thembaocaohangtondc($id)
-    {
-    $product = hanghoa::find($id);
-
-    if(!$product)
-    {
-        abort(404);
-    }
-    $cart = session()->get('cart');
-    // if cart is empty then this the first product
-    if(!$cart) {
-    $cart = [
-        $id => [
-                "name" => $product->Ten,
-                "quantity" => 1,
-                "DVTinh"=> $product->DVTinh,
-                "id_hanghoa"=> $product->id_hanghoa
-                ]
-            ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
-    } 
-    // if cart not empty then check if this product exist then increment quantity
-    if(isset($cart[$id])) {
-
-        $cart[$id]['quantity']++;
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('thongbao', 'Thành công!');
-    }
-    // if item not exist in cart then add to cart with quantity = 1
-    $cart[$id] = [
-        "name" => $product->Ten,
-        "quantity" => 1,
-        "DVTinh"=> $product->DVTinh,
-        "id_hanghoa"=> $product->id_hanghoa
-    ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
-    }
+//             return redirect()->back()->with('thongbao', 'Thành công!');
+//         }
+//         // if item not exist in cart then add to cart with quantity = 1
+//         $cart[$id] = [
+//             "name" => $product->Ten,
+//             "quantity" => 1,
+//             "DVTinh"=> $product->DVTinh,
+//             "id_hanghoa"=> $product->id_hanghoa
+//         ];
+//         session()->put('cart', $cart);
+//         return redirect()->back()->with('thongbao', 'Thành công!');
+//     }
 
 
+
+// //Báo cáo hàng tồn đầu ca
+//     public function baocaohangtondc()
+//     {
+//     $products= hanghoa::all();
+//     return view('baocaohangtondc',compact('products'));
+//     }
+// //Get giỏ báo cáo hàng tồn đầu ca
+//     public function getgiobchangtondc()
+//     {
+//     return view('giobchangtondc');
+//     }
+// //Post giỏ báo cáo hàng tồn đầu ca
+//     public function postgiobchangtondc()
+//     {   
+//     $cart = session()->get('cart');
+//     foreach ($cart as $key => $value) {
+//         $hanghoa = hanghoa::find($key);
+//         $hanghoa->SoLuong += $value['quantity'];
+//         $hanghoa->TonDC += $value['quantity'];
+//         $hanghoa->save();
+//     } 
+//     session()->forget('cart');
+//     return redirect('xuathhthanhcong');
+
+//     }
+// //Thêm báo cáo hàng tồn đầu ca(Addtocart)
+//     public function thembaocaohangtondc($id)
+//     {
+//     $product = hanghoa::find($id);
+
+//     if(!$product)
+//     {
+//         abort(404);
+//     }
+//     $cart = session()->get('cart');
+//     // if cart is empty then this the first product
+//     if(!$cart) {
+//     $cart = [
+//         $id => [
+//                 "name" => $product->Ten,
+//                 "quantity" => 1,
+//                 "DVTinh"=> $product->DVTinh,
+//                 "id_hanghoa"=> $product->id_hanghoa
+//                 ]
+//             ];
+//     session()->put('cart', $cart);
+//     return redirect()->back()->with('thongbao', 'Thành công!');
+//     } 
+//     // if cart not empty then check if this product exist then increment quantity
+//     if(isset($cart[$id])) {
+
+//         $cart[$id]['quantity']++;
+
+//         session()->put('cart', $cart);
+
+//         return redirect()->back()->with('thongbao', 'Thành công!');
+//     }
+//     // if item not exist in cart then add to cart with quantity = 1
+//     $cart[$id] = [
+//         "name" => $product->Ten,
+//         "quantity" => 1,
+//         "DVTinh"=> $product->DVTinh,
+//         "id_hanghoa"=> $product->id_hanghoa
+//     ];
+//     session()->put('cart', $cart);
+//     return redirect()->back()->with('thongbao', 'Thành công!');
+//     }
 
 
 
 
-//Báo cáo hàng hủy
-    public function baocaohanghuy()
-    {
-    $products= hanghoa::all();
-    return view('baocaohanghuy',compact('products'));
-    }
-//Get giỏ báo cáo hàng hủy
-    public function getgiobchanghuy()
-    {
-    return view('giobchanghuy');
-    }
-//Post giỏ báo cáo hàng hủy
-    public function postgiobchanghuy()
-    {   
-    $cart = session()->get('cart');
-    foreach ($cart as $key => $value) {
-        $hanghoa = hanghoa::find($key);
-        $hanghoa->Huy += $value['quantity'];
-        $hanghoa->DeLai -= $value['quantity'];
-        $hanghoa->save();
-    } 
-    session()->forget('cart');
-    return redirect('xuathhthanhcong');
 
-    }
-//Thêm báo cáo hàng hủy (Addtocart)
-    public function thembaocaohanghuy($id)
-    {
-    $product =hanghoa::find($id);
 
-    if(!$product)
-    {
-        abort(404);
-    }
-    $cart = session()->get('cart');
-    // if cart is empty then this the first product
-    if(!$cart) {
-    $cart = [
-        $id => [
-                "name" => $product->Ten,
-                "quantity" => 1,
-                "DVTinh"=> $product->DVTinh,
-                "id_hanghoa"=> $product->id_hanghoa
-                ]
-            ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
-    } 
-    // if cart not empty then check if this product exist then increment quantity
-    if(isset($cart[$id])) {
+// //Báo cáo hàng hủy
+//     public function baocaohanghuy()
+//     {
+//     $products= hanghoa::all();
+//     return view('baocaohanghuy',compact('products'));
+//     }
+// //Get giỏ báo cáo hàng hủy
+//     public function getgiobchanghuy()
+//     {
+//     return view('giobchanghuy');
+//     }
+// //Post giỏ báo cáo hàng hủy
+//     public function postgiobchanghuy()
+//     {   
+//     $cart = session()->get('cart');
+//     foreach ($cart as $key => $value) {
+//         $hanghoa = hanghoa::find($key);
+//         $hanghoa->Huy += $value['quantity'];
+//         $hanghoa->DeLai -= $value['quantity'];
+//         $hanghoa->save();
+//     } 
+//     session()->forget('cart');
+//     return redirect('xuathhthanhcong');
 
-        $cart[$id]['quantity']++;
+//     }
+// //Thêm báo cáo hàng hủy (Addtocart)
+//     public function thembaocaohanghuy($id)
+//     {
+//     $product =hanghoa::find($id);
 
-        session()->put('cart', $cart);
+//     if(!$product)
+//     {
+//         abort(404);
+//     }
+//     $cart = session()->get('cart');
+//     // if cart is empty then this the first product
+//     if(!$cart) {
+//     $cart = [
+//         $id => [
+//                 "name" => $product->Ten,
+//                 "quantity" => 1,
+//                 "DVTinh"=> $product->DVTinh,
+//                 "id_hanghoa"=> $product->id_hanghoa
+//                 ]
+//             ];
+//     session()->put('cart', $cart);
+//     return redirect()->back()->with('thongbao', 'Thành công!');
+//     } 
+//     // if cart not empty then check if this product exist then increment quantity
+//     if(isset($cart[$id])) {
 
-        return redirect()->back()->with('thongbao', 'Thành công!');
-    }
-    // if item not exist in cart then add to cart with quantity = 1
-    $cart[$id] = [
-        "name" => $product->Ten,
-        "quantity" => 1,
-        "DVTinh"=> $product->DVTinh,
-        "id_hanghoa"=> $product->id_hanghoa
-    ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
-    }
+//         $cart[$id]['quantity']++;
+
+//         session()->put('cart', $cart);
+
+//         return redirect()->back()->with('thongbao', 'Thành công!');
+//     }
+//     // if item not exist in cart then add to cart with quantity = 1
+//     $cart[$id] = [
+//         "name" => $product->Ten,
+//         "quantity" => 1,
+//         "DVTinh"=> $product->DVTinh,
+//         "id_hanghoa"=> $product->id_hanghoa
+//     ];
+//     session()->put('cart', $cart);
+//     return redirect()->back()->with('thongbao', 'Thành công!');
+//     }
 
 // Thanh toán
     public function thanhtoan()
@@ -2331,7 +2331,7 @@ class MyController extends Controller
 // Sửa người dùng
     public function getsuanguoidung($id)
     {
-        $user= User::find($id);
+        $user=User::find($id);
         return view('suanguoidung',['user'=>$user]);
     }
     public function postsuanguoidung(Request $request,$id)
