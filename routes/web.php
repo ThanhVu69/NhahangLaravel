@@ -34,6 +34,18 @@
     Route::get('nhanvien/suanhanvien', 'NhanvienController@suanhanvien')->name('nhanvien.suanhanvien');
     Route::get('nhanvien/xoanhanvien', 'NhanvienController@xoanhanvien')->name('nhanvien.xoanhanvien');
 
+// Loại món ăn
+    Route::get('loaimonan','MonanController@loaimonan',function(){
+    })->middleware('adminLogin');
+    // Thêm loại món ăn
+    Route::get('themloaimonan','MonanController@getthemloaimonan');
+    Route::post('themloaimonan','MonanController@postthemloaimonan');
+    //Sửa loại món ăn
+    Route::get('sualoaimonan/{id}','MonanController@getsualoaimonan');
+    Route::post('sualoaimonan/{id}','MonanController@postsualoaimonan');
+    //Xóa loại món ăn
+    Route::get('xoaloaimonan/{id}','MonanController@getxoaloaimonan');
+
 // Món ăn
     Route::get('monan','MonanController@monan',function(){
     })->middleware('adminLogin');

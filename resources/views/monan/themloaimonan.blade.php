@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Thêm món ăn</title>
+    <title>Thêm loại món ăn</title>
     <script src="them/js/lumino.glyphs.js"></script>
     <script type="text/javascript" src="them/ckeditor/ckeditor.js"></script>
     <!-- Tell the browser to be responsive to screen width -->
@@ -42,24 +42,12 @@
         @include('trangquanly.thanhmenu')
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Công ty CP Toàn Phong
-                    <small>Bánh cuốn Gia An</small>
-                </h1><br>
-
-                <!-- <i class= "fa fa-cubes"></i>
-      <a href="themmonan">Thêm món ăn</a></li><br> -->
-
-            </section>
-            <!-- Main content -->
             <section class="content">
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Thêm món ăn</h3>
+                                <h3 class="box-title">Thêm loại món ăn</h3>
                             </div>
                             @if(session('thongbao'))
                             <div class="alert alert-success">
@@ -68,48 +56,20 @@
                             @endif
                             <div class="box-body">
                                 <div class="table table-bordered table-hover">
-                                    <form action="themmonan" method="post" enctype="multipart/form-data">
+                                    <form action="themloaimonan" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                         <div class="row" style="margin-bottom:40px">
                                             <div class="col-xs-8">
                                                 <div class="form-group">
-                                                    <label>Ảnh món ăn</label>
-                                                    <input required type="file" name="anh" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Mã món ăn</label>
+                                                    <label>Mã loại món ăn</label>
                                                     <input required type="text" name="ma" class="form-control">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Tên món ăn</label>
-                                                    <input required type="text" name="Ten" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Thuộc loại món ăn</label><br>
-                                                    <select class="form-control" name="id_loaimonan">
-                                                        @foreach($loaimonan as $ch)
-                                                        <option value="{{$ch->id}}">{{$ch->ten}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Đơn giá</label>
-                                                    <input required type="number" name="dongia" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Giá khuyến mãi</label>
-                                                    <input required type="number" name="khuyenmai" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Đơn vị tính</label>
-                                                    <input required type="text" name="DVTinh" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Mô tả</label>
-                                                    <textarea required name="mota"></textarea>
+                                                    <label>Tên loại món ăn</label>
+                                                    <input required type="text" name="ten" class="form-control">
                                                 </div>
                                                 <input type="submit" name="submit" value="Thêm" class="btn btn-primary">
-                                                <a href="monan" class="btn btn-danger">Hủy bỏ</a>
+                                                <a href="loaimonan" class="btn btn-danger">Hủy bỏ</a>
                                             </div>
                                         </div>
                                     </form>
@@ -150,7 +110,7 @@
         <script src="them/js/easypiechart.js"></script>
         <script src="them/js/easypiechart-data.js"></script>
         <script src="them/js/bootstrap-datepicker.js"></script>
-
+        
 </body>
 
 </html>

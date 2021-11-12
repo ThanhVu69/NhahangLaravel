@@ -23,9 +23,9 @@ class monan extends Model
     {
         return $this->hasMany('App\ctpxuat','id_monan','id');
     }
-    public function BillDetail()
+    public function loaimonan()
     {
-        return $this->hasMany('App\BillDetail','id_monan','id');
+        return $this->belongsTo('App\loaimonan','id_loaimonan','id');
     }
 
 }

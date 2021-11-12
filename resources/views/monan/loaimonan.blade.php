@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Món ăn</title>
+    <title>Loại món ăn</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -24,7 +24,7 @@
         <div class="content-wrapper">
             <section class="content-header">
                 @if($xem_ac[0]->quyen==1)
-                <a href="themmonan" class="btn btn-primary">Thêm món ăn</a><br>
+                <a href="themloaimonan" class="btn btn-primary">Thêm loại món ăn</a><br>
                 @endif
             </section>
             @if(session('thongbao'))
@@ -37,40 +37,30 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Danh sách món ăn</h3>
+                                <h3 class="box-title">Danh sách loại món ăn</h3>
                             </div>
                             <div class="box-body">
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr role="row">
-                                            <th></th>
-                                            <th>Mã MA</th>
+                                            <th>Mã loại MA</th>
                                             <th>Tên</th>
-                                            <th>Thuộc loại món ăn</th>
-                                            <th>Đơn giá</th>
-                                            <th>Giá khuyến mãi</th>
-                                            <th>Đơn vị tính</th>
-                                            <th>Mô tả</th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($monan as $hh)
+                                        @foreach($loaimonan as $hh)
                                         <tr>
-                                            <td><img style="width: auto; height:50px;"
-                                                src="upload/monan/{{$hh->image}}" /></td>
-                                            <td style="width:10%;">{{$hh->ma}}</td>
-                                            <td style="width:20%;">{{$hh->Ten}}</td>
-                                            <td>{{$hh->loaimonan->ten}}</td>
-                                            <td>{{$hh->dongia}}</td>
-                                            <td>{{$hh->khuyenmai}}</td>
-                                            <td>{{$hh->DVTinh}}</td>
-                                            <td style="width:50%;">{{$hh->mota}}</td>
-                                            <td><a href="xoamonan/{{$hh->id}}"
+                                            <td>{{$hh->ma}}</td>
+                                            <td>{{$hh->ten}}</td>
+                                            <td><a href="#" data-toggle="modal" data-target="#{{$hh->id}}">Chi tiết</a>
+                                            </td>
+                                            <td><a href="xoaloaimonan/{{$hh->id}}"
                                                     onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
                                                     class="btn btn-danger btn-sm">Xóa</a></td>
-                                            <td><a href="suamonan/{{$hh->id}}"
+                                            <td><a href="sualoaimonan/{{$hh->id}}"
                                                     onclick="return confirm('Bạn có chắc chắn muốn sửa?')"
                                                     class="btn btn-info btn-sm">Sửa</a></td>
                                         </tr>
@@ -85,7 +75,48 @@
             </section>
         </div>
     </div>
-  
+
+    @foreach($loaimonan as $hh)
+    <div class="modal fade" id="{{$hh->id}}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{$hh->ten}}</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr role="row">
+                                <th>Tên</th>
+                                <th>Đơn giá</th>
+                                <th>Khuyến mãi</th>
+                                <th>Đơn vị tính</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($monan as $gv)
+                            @if($gv->id_loaimonan == $hh->id)
+                            <tr>
+                                <td>{{$gv->Ten}}</td>
+                                <td>{{$gv->dongia}}</td>
+                                <td>{{$gv->khuyenmai}}</td>
+                                <td>{{$gv->DVTinh}}</td>
+                            </tr>
+                            @endif
+                            @endforeach
+                        </tbody>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->

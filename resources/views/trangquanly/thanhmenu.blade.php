@@ -27,6 +27,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="{{url('nhanvien')}}"><i class="fa fa-circle-o"></i>Nhân viên</a></li>
+            <li><a href="{{url('loaimonan')}}"><i class="fa fa-circle-o"></i>Loại món ăn</a></li>
             <li><a href="{{url('monan')}}"><i class="fa fa-circle-o"></i>Món ăn</a></li>
             <li><a href="{{url('hanghoa')}}"><i class="fa fa-circle-o"></i>Hàng hóa</a></li>
             <li><a href="{{url('coso')}}"><i class="fa fa-circle-o"></i>Cơ sở khác</a></li>
