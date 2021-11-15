@@ -22,11 +22,12 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
             <span class="pull-right-container">
-              <span class="label label-primary pull-right">5</span>
+              <span class="label label-primary pull-right">4</span>
             </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="{{url('nhanvien')}}"><i class="fa fa-circle-o"></i>Nhân viên</a></li>
+            <li><a href="{{url('loaimonan')}}"><i class="fa fa-circle-o"></i>Loại món ăn</a></li>
             <li><a href="{{url('monan')}}"><i class="fa fa-circle-o"></i>Món ăn</a></li>
             <li><a href="{{url('hanghoa')}}"><i class="fa fa-circle-o"></i>Hàng hóa</a></li>
             <li><a href="{{url('coso')}}"><i class="fa fa-circle-o"></i>Cơ sở khác</a></li>
@@ -60,14 +61,13 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span> -->
             <span class="pull-right-container">
-              <span class="label label-primary pull-right">3</span>
+              <span class="label label-primary pull-right">2</span>
             </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="{{url('doanhthu')}}"><i class="fa fa-circle-o"></i> Doanh thu</a></li>
             <!-- <li><a href="{{url('doanhthuonline')}}"><i class="fa fa-circle-o"></i> Doanh thu online</a></li> -->
-            <li><a href="{{url('hangban')}}"><i class="fa fa-circle-o"></i> Hàng bán</a></li>
-            <li><a href="{{url('hangkho')}}"><i class="fa fa-circle-o"></i> Hàng khô</a></li>
+            <li><a href="{{url('hangban')}}"><i class="fa fa-circle-o"></i> Hàng bán - hàng thô</a></li>
           </ul>
         </li>
       </ul>
