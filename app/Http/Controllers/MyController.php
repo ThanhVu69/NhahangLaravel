@@ -100,7 +100,7 @@ class MyController extends Controller
             return redirect()->back()->with('success','Đã thanh toán');                        
         }
 
-//updateCart and remove
+//Cập nhật và xóa giỏ hàng
     public function update(Request $request)
     {
         if($request->id and $request->quantity)
@@ -133,6 +133,27 @@ class MyController extends Controller
     }
 
  
+//Báo cáo tổng hợp
+    public function tonghop()
+        {
+        // $month = Carbon::now()->month;
+        // ->whereMonth('ctpnhap.created_at', $month)
+
+        $nhap =DB::table('ctpnhap')-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        ->groupBy('Ten')->get();
+        $xuat =DB::table('ctpxuat')-> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        ->groupBy('Ten')->get();
+        $huy =DB::table('ctphuy')-> join('hanghoa','hanghoa.id','=','ctphuy.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        ->groupBy('Ten')->get();
+        $ton =DB::table('ctpton')-> join('hanghoa','hanghoa.id','=','ctpton.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        ->groupBy('Ten')->get();
+        // dd($xuat);
+            return view('baocao.tonghop',compact('nhap','xuat','huy','ton'));
+        }
 
 
 //Hàng bán
@@ -249,6 +270,34 @@ class MyController extends Controller
             $check->save();
             return response()->json("success");
         }
+    }
+
+//Test
+    public function test()
+    {
+        // $nhap = DB::table('ctpnhap')-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
+        // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        // ->groupBy('Ten')->get();
+
+        // $xuat = DB::table('ctpxuat')-> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')
+        // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        // ->groupBy('Ten')->get();
+
+        
+       
+
+        $nhap = DB::table('ctpnhap')->select('id_hanghoa',DB::raw('SUM(SoLuong) as SLnhap'))->groupBy('id_hanghoa');
+        $xuat = DB::table('ctpxuat')->select('id_hanghoa',DB::raw('SUM(SoLuong) as SLxuat'))->groupBy('id_hanghoa');
+
+        $hanghoa = DB::table('hanghoa')
+        ->leftjoin('ctpnhap','hanghoa.id','=','ctpnhap.id_hanghoa')
+        ->leftjoin('ctpxuat','hanghoa.id','=','ctpxuat.id_hanghoa')
+        ->select('Ten',DB::raw('SUM(ctpnhap.SoLuong) as SLnhap'),DB::raw('SUM(ctpxuat.SoLuong) as SLxuat'))
+        ->groupBy('Ten')
+        ->get();
+
+        dd($hanghoa);
+        return view('test',compact('hanghoa'));
     }
 }
 

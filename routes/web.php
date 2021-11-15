@@ -73,14 +73,18 @@
 //Phiếu nhập
     Route::get('phieunhap','PhieuNhapXuatController@phieunhap');
     Route::get('phieunhapngay','PhieuNhapXuatController@phieunhapngay');
-    //Chi tiết phiếu nhập
-    Route::get('ctpnhap/{id}','PhieuNhapXuatController@ctpnhap');
 
 //Phiếu xuất
     Route::get('phieuxuat','PhieuNhapXuatController@phieuxuat');
     Route::get('phieuxuatngay','PhieuNhapXuatController@phieuxuatngay');
-    //Chi tiết phiếu xuất
-    Route::get('ctpxuat/{id}','PhieuNhapXuatController@ctpxuat');
+
+//Phiếu hủy
+    Route::get('phieuhuy','PhieuHuyTonController@phieuhuy');
+    Route::get('phieuhuyngay','PhieuHuyTonController@phieuhuyngay');
+
+//Phiếu tồn
+    Route::get('phieuton','PhieuHuyTonController@phieuton');
+    Route::get('phieutonngay','PhieuHuyTonController@phieutonngay');
 
 //Cơ sở khác:
     Route::get('coso','CuahangController@coso',function(){
@@ -118,10 +122,12 @@
     Route::get('doanhthunam','MyController@doanhthunam');
     Route::get('exceldoanhthungay','DoanhthuController@exceldoanhthungay');
 
-//Hàng bán
+//Báo cáo hàng hóa
     Route::get('hangban','MyController@hangban');
     Route::get('xuatexcel','MyController@excel');
     Route::get('capnhat','MyController@capnhat');
+    
+    Route::get('tonghop','MyController@tonghop');
 
 //ORDER
     Route::get('order','OrderController@order');
@@ -131,19 +137,19 @@
     Route::patch('capnhatgiohang', 'OrderController@updategiohang'); 
     Route::delete('xoagiohang', 'OrderController@removegiohang');
 
-//NHẬP HÀNG THÔ
-    Route::get('nhaphangan', 'NhapXuatHangthoController@nhaphangan'); 
-    Route::get('giohangannhap', 'NhapXuatHangthoController@getgiohangannhap');
-    Route::post('giohangannhap','NhapXuatHangthoController@postgiohangannhap');
-    Route::get('themnhaphangan/{id}', 'NhapXuatHangthoController@themnhaphangan');
-    Route::patch('update-cart', 'NhapXuatHangthoController@updategiohangthonhap'); 
-    Route::delete('remove-from-cart', 'NhapXuatHangthoController@removegiohangthonhap');
+//NHẬP HÀNG HÓA
+    Route::get('nhaphangan', 'NhapXuatHanghoaController@nhaphangan'); 
+    Route::get('giohangannhap', 'NhapXuatHanghoaController@getgiohangannhap');
+    Route::post('giohangannhap','NhapXuatHanghoaController@postgiohangannhap');
+    Route::get('themnhaphangan/{id}', 'NhapXuatHanghoaController@themnhaphangan');
+    Route::patch('update-cart', 'NhapXuatHanghoaController@updategiohangthonhap'); 
+    Route::delete('remove-from-cart', 'NhapXuatHanghoaController@removegiohangthonhap');
 
-//XUẤT HÀNG THÔ
-    Route::get('xuathangan','NhapXuatHangthoController@xuathangan');
-    Route::get('giohanganxuat','NhapXuatHangthoController@getgiohanganxuat');
-    Route::post('giohanganxuat','NhapXuatHangthoController@postgiohanganxuat');
-    Route::get('themxuathangan/{id}', 'NhapXuatHangthoController@themxuathangan');
+//XUẤT HÀNG HÓA
+    Route::get('xuathangan','NhapXuatHanghoaController@xuathangan');
+    Route::get('giohanganxuat','NhapXuatHanghoaController@getgiohanganxuat');
+    Route::post('giohanganxuat','NhapXuatHanghoaController@postgiohanganxuat');
+    Route::get('themxuathangan/{id}', 'NhapXuatHanghoaController@themxuathangan');
 
 //BÁO CÁO HÀNG TỒN
     Route::get('baocaohangton','HangTonController@baocaohangton');
@@ -160,7 +166,6 @@
     Route::patch('capnhatgiohangtondc', 'HangTonController@updategiohangtondc'); 
     Route::delete('xoagiohangtondc', 'HangTonController@removegiohangtondc');
 
-
 //BÁO CÁO HÀNG HỦY
     Route::get('baocaohanghuy','HangHuyController@baocaohanghuy');
     Route::get('giobchanghuy','HangHuyController@getgiobchanghuy');
@@ -168,6 +173,7 @@
     Route::get('thembaocaohanghuy/{id}', 'HangHuyController@thembaocaohanghuy');
 
 
-
+//Test
+    Route::get('test','MyController@test');
 
     

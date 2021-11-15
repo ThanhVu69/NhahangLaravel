@@ -10,14 +10,14 @@ class cuahang extends Model
     
     public function phieunhap()
     {
-        return $this->hasMany('App\phieunhap','id_phieunhap','id');
+        return $this->hasMany('App\phieunhap','id_cuahang','id');
     }
     public function phieuxuat()
     {
-        return $this->hasMany('App\phieuxuat','id_phieuxuat','id');
+        return $this->hasMany('App\phieuxuat','id_cuahang','id');
     }
-    public function Khachdatban()
+    public function baocaohanghoa()
     {
-        return $this->hasMany('App\Khachdatban','id_khachdatban','id');
+        return $this->hasMany('App\baocaohanghoa','id_cuahang','id');
     }
 }

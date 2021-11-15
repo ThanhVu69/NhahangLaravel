@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\hanghoa;
+use App\baocaohanghoa;
+use App\ctbaocaohanghoa;
 
 class HanghoaController extends Controller
 {

@@ -33,7 +33,7 @@ class HoadonController extends Controller
     //Chi tiết hóa đơn bán
     public function cthdban($id)
     {
-    $monan= monan::where('spdg',0)->get();
+    $monan= monan::all();
     $hoadonban= hdban::all();
     $hoadonban= hdban::find($id);
     $cthdban= cthdban::where('id_hoadonban', '=',$id)->get();

@@ -49,25 +49,21 @@
             <li><a href="{{url('phieunhap')}}"><i class="fa fa-circle-o"></i> Phiếu nhập</a></li>
             <li><a href="{{url('phieuxuat')}}"><i class="fa fa-circle-o"></i> Phiếu xuất</a></li>
             <li><a href="{{url('hoadonban')}}"><i class="fa fa-circle-o"></i> Hóa đơn bán</a></li>
-            <!-- <li><a href="{{url('hoadonbanonline')}}"><i class="fa fa-circle-o"></i> Hóa đơn online</a></li> -->
-            <!-- <li><a href="{{url('khachdatban')}}"><i class="fa fa-circle-o"></i>Khách đặt bàn</a></li> -->
         </ul>
         </li>
         <li class="active treeview menu-open">
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Báo cáo thống kê</span>
-            <!-- <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span> -->
             <span class="pull-right-container">
               <span class="label label-primary pull-right">2</span>
             </span>
           </a>
           <ul class="treeview-menu">
             <li><a href="{{url('doanhthu')}}"><i class="fa fa-circle-o"></i> Doanh thu</a></li>
-            <!-- <li><a href="{{url('doanhthuonline')}}"><i class="fa fa-circle-o"></i> Doanh thu online</a></li> -->
-            <li><a href="{{url('hangban')}}"><i class="fa fa-circle-o"></i> Hàng bán - hàng thô</a></li>
+            <li><a href="{{url('phieuhuy')}}"><i class="fa fa-circle-o"></i> Hàng hủy</a></li>
+            <li><a href="{{url('phieuton')}}"><i class="fa fa-circle-o"></i> Hàng tồn</a></li>
+            <li><a href="{{url('tonghop')}}"><i class="fa fa-circle-o"></i> Tổng hợp</a></li>
           </ul>
         </li>
       </ul>

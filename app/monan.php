@@ -27,5 +27,13 @@ class monan extends Model
     {
         return $this->belongsTo('App\loaimonan','id_loaimonan','id');
     }
+    public function ctphuy()
+    {
+        return $this->hasMany('App\ctphuy','id_monan','id');
+    }
+    public function ctpton()
+    {
+        return $this->hasMany('App\ctpton','id_monan','id');
+    }
 
 }

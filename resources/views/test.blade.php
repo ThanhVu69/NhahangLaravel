@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Hóa đơn bán</title>
+    <title>Test</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -31,19 +31,16 @@
     <!-- Google Font -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
-
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         @include('trangquanly.header')
         @include('trangquanly.thanhmenu')
-
-        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
+                Báo cáo tổng hợp tháng
             </section>
             <!-- Main content -->
             <section class="content">
@@ -51,9 +48,9 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Danh sách hóa đơn bán</h3><br>
+                                <h3 class="box-title">Báo cáo tổng hợp tháng</h3>
                                 <div class="col-xs-4">
-                                    <form action="hdbanngay" method="get">
+                                    <form action="doanhthungay" method="get">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                         <div class="form-group">
                                             <h5 style=" text-align: center"><label>Ngày</label></h5>
@@ -64,78 +61,41 @@
                                         </div>
                                 </div>
                                 </form>
+                                <div style="align=center">
+                                    <a href="exceldoanhthungay" class="btn btn-success">Xuất sang EXCEL</a>
+                                </div>
                             </div>
                             <!-- /.box-header -->
-                            <div class="box-body">
-                                @if(session('thongbao'))
-                                <div class="alert alert-success">
-                                    {{session('thongbao')}}
+                            <div class="col-xs-12">
+                                <div class="box">
+                                    <div class="box-body">
+                                        <table id="example4" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Tên hàng hóa</th>
+                                                    <th>Nhập</th>
+                                                    <th>Xuất</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($hanghoa as $hh)
+                                                <tr>
+                                                    <td>{{$hh->Ten}}</td>
+                                                    <td>{{number_format($hh->SLnhap)}}</td>
+                                                    <td>{{number_format($hh->SLxuat)}}</td>
+                                                </tr>
+                                                @endforeach
+                                        </table>
+                                    </div>
                                 </div>
-                                @endif
-                                <table id="example1" class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Mã HĐ</th>
-                                            <th>Ngày</th>
-                                            <th>Nhân viên bán hàng</th>
-                                            <th> Tổng Tiền</th>
-                                            <th>Bàn số</th>
-                                            <th>Trạng thái</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach($hoadonban as $product)
-                                        <tr style=" text-align: center">
-                                            <td>{{$product->ma}}{{$product->id}}</td>
-                                            <td>{{$product->Ngay}}</td>
-                                            <td>{{$product->User->name}}</td>
-                                            <td>{{$product->ThanhTien}}.000VNĐ</td>
-                                            <td>{{$product->soban}}</td>
-                                            <td>
-                                                @if ($product->trangthai==1)
-                                                <a href="#" class="label-success label">Đã xử lý</a>
-                                                @else
-                                                <a href="#" class="label label-default">Chờ xử lý</a>
-                                                @endif
-                                            </td>
-                                            <td><a href="thanhtoanoff/{{$product->id}}"
-                                                    class="btn btn-success btn-sm">Thanh toán</a></td>
-                                            <td><a href="cthdban/{{$product->id}}" class="btn btn-primary btn-sm">Chi
-                                                    tiết</a></td>
-                                            @if ($product->trangthai!=1)
-                                            <td><a href="xoahdban/{{$product->id}}" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a></td>
-                                            @else
-                                            <td></td>
-                                            @endif
-                                        </tr>
-                                        @endforeach
-
-                                    </tbody>
-
-                                    </tfoot>
-                                </table>
-
                             </div>
-                            <!-- /.box-body -->
+                            
                         </div>
-                        <!-- /.box -->
                     </div>
-                    <!-- /.col -->
                 </div>
-                <!-- /.row -->
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
-
     </div>
-    <!-- ./wrapper -->
-
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
@@ -152,10 +112,15 @@
     <!-- AdminLTE for demo purposes -->
     <script src="../../dist/js/demo.js"></script>
     <!-- page script -->
+
+
+    <!-- Datatables -->
     <script>
     $(function() {
         $('#example1').DataTable()
-        $('#example2').DataTable({
+        $('#example2').DataTable()
+        $('#example4').DataTable()
+        $('#example3').DataTable({
             'paging': true,
             'lengthChange': true,
             'searching': true,

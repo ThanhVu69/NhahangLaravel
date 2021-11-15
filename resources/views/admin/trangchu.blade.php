@@ -106,7 +106,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Báo cáo </span>
-                        <span class="info-box-number">Hàng tồn cuối ca</span>
+                        <span class="info-box-number">Hàng tồn</span>
                         <div class="progress">
                             <div class="progress-bar" style="width: 50%"></div>
                         </div>

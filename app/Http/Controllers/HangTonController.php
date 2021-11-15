@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\hanghoa;
+use App\phieuton;
+use App\ctpton;
+use App\monan;
+use App\nhanvien;
+use App\cuahang;
+use App\User;
 
 class HangTonController extends Controller
 {
@@ -29,14 +35,28 @@ class HangTonController extends Controller
     public function postgiobchangton()
     {   
         $cart = session()->get('cart');
-        foreach ($cart as $key => $value) {
-            $hanghoa = hanghoa::find($key);
-            $hanghoa->Ngay = date('Y-m-d');
-            $hanghoa->SoLuong -= $value['quantity'];
-            $hanghoa->Ton += $value['quantity'];
-            $hanghoa->DeLai += $value['quantity'];
-            $hanghoa->save();
-        } 
+        $bill = new phieuton;
+        $bill->Ngay = date('Y-m-d');
+        $bill->ma; 
+        $user = User::all();
+        $bill->id_nhanvien = Auth::user()->id;
+        $bill->save();
+        // foreach ($cart as $key => $value) {
+        //     $hanghoa = hanghoa::find($key);
+        //     $hanghoa->Ngay = date('Y-m-d');
+        //     $hanghoa->SoLuong -= $value['quantity'];
+        //     $hanghoa->Ton += $value['quantity'];
+        //     $hanghoa->DeLai += $value['quantity'];
+        //     $hanghoa->save();
+        // } 
+        foreach($cart as $key => $value) 
+        {
+            $bill_detail = new ctpton;
+            $bill_detail->id_phieuton = $bill->id;
+            $bill_detail->id_hanghoa = $key;
+            $bill_detail->SoLuong = $value['quantity'];
+            $bill_detail->save();
+        }
     session()->forget('cart');
     echo"<script>
         alert('Báo cáo hàng tồn thành công!');
@@ -117,6 +137,14 @@ class HangTonController extends Controller
         }
     }
 
+
+
+
+
+
+
+
+
 //Báo cáo hàng tồn đầu ca
     public function baocaohangtondc()
     {
@@ -143,7 +171,6 @@ class HangTonController extends Controller
         alert('Báo cáo hàng tồn đầu ca thành công!');
         window.location = ' ".url('trangchu')."'
         </script>";
-
     }
 //Thêm báo cáo hàng tồn đầu ca
     public function thembaocaohangtondc($id)

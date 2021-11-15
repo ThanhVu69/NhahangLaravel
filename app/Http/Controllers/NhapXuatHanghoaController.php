@@ -31,9 +31,9 @@ use Excel;
 use input;
 use Yajra\Datatables\Datatables;
 
-class NhapXuatHangthoController extends Controller
+class NhapXuatHanghoaController extends Controller
 {
-    //Nhập hàng thô
+//Nhập hàng hóa
     public function nhaphangan()
     {
         $products = hanghoa::all();
@@ -41,7 +41,7 @@ class NhapXuatHangthoController extends Controller
         return view('nhapxuathang.nhaphangan', compact('products'));
     }
 
-//Giỏ hàng thô (nhập)
+//Giỏ hàng hóa (nhập)
     public function getgiohangannhap()
     {
         $cuahang=cuahang::all();
@@ -57,12 +57,12 @@ class NhapXuatHangthoController extends Controller
         $bill->id_nhanvien = Auth::user()->id;
         $bill->id_cuahang= $request->id_cuahang;     
         $bill->save();
-        foreach ($cart as $key => $value) {
-            $hanghoa = hanghoa::find($key);
-            $hanghoa->Nhap += $value['quantity'];
-            $hanghoa->SoLuong += $value['quantity'];
-            $hanghoa->save();
-        }  
+        // foreach ($cart as $key => $value) {
+        //     $hanghoa = hanghoa::find($key);
+        //     $hanghoa->Nhap += $value['quantity'];
+        //     $hanghoa->SoLuong += $value['quantity'];
+        //     $hanghoa->save();
+        // } 
         foreach($cart as $key => $value) 
         {
             $bill_detail = new ctpnhap;
@@ -78,7 +78,7 @@ class NhapXuatHangthoController extends Controller
         </script>";
     }
 
-//Thêm vào giỏ hàng thô
+//Thêm vào giỏ hàng hóa
     public function themnhaphangan($id)
     {
         $product = hanghoa::find($id);
@@ -152,14 +152,14 @@ class NhapXuatHangthoController extends Controller
         }
     }
 
-//Xuất hàng thô
+//Xuất hàng hóa
     public function xuathangan()
     {
     $products = hanghoa::all();
     return view('nhapxuathang.xuathangan', compact('products'));
     }
 
-//Giỏ hàng thô (xuất)
+//Giỏ hàng hóa (xuất)
     public function getgiohanganxuat()
     {
         $cuahang=cuahang::all();
@@ -175,12 +175,12 @@ class NhapXuatHangthoController extends Controller
         $bill->id_nhanvien = Auth::user()->id;
         $bill->id_cuahang= $request->id_cuahang;     
         $bill->save();
-        foreach ($cart as $key => $value) {
-            $hanghoa = hanghoa::find($key);
-            $hanghoa->Xuat += $value['quantity'];
-            $hanghoa->SoLuong -= $value['quantity'];
-            $hanghoa->save();
-        } 
+        // foreach ($cart as $key => $value) {
+        //     $hanghoa = hanghoa::find($key);
+        //     $hanghoa->Xuat += $value['quantity'];
+        //     $hanghoa->SoLuong -= $value['quantity'];
+        //     $hanghoa->save();
+        // } 
         foreach($cart as $key => $value) 
         {
             $bill_detail = new ctpxuat;

@@ -16,8 +16,12 @@ class hanghoa extends Model
     {
         return $this->hasMany('App\ctpxuat','id_hanghoa','id');
     }
-    public function hangto()
+    public function ctphuy()
     {
-        return $this->hasMany('App\hangto','id_hanghoa','id');
+        return $this->hasMany('App\ctphuy','id_hanghoa','id');
+    }
+    public function ctpton()
+    {
+        return $this->hasMany('App\ctpton','id_hanghoa','id');
     }
 }

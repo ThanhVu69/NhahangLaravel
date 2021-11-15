@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Phiếu nhập</title>
+    <title>Phiếu hủy</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -35,9 +35,7 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-
         @include('trangquanly.header')
-        <!-- Left side column. contains the logo and sidebar -->
         @include('trangquanly.thanhmenu')
 
         <!-- Content Wrapper. Contains page content -->
@@ -51,9 +49,9 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Danh sách phiếu nhập</h3><br>
+                                <h3 class="box-title">Danh sách phiếu hủy</h3><br>
                                 <div class="col-xs-4">
-                                    <form action="phieunhapngay" method="get">
+                                    <form action="phieuhuyngay" method="get">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                         <div class="form-group">
                                             <h5 style=" text-align: center"><label>Ngày</label></h5>
@@ -71,42 +69,37 @@
                                     <thead>
                                         <tr role="row">
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Mã PN: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Mã PN</th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Cửa hàng: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Cửa hàng</th>
+                                                colspan="1" aria-label="Mã PX: activate to sort column descending"
+                                                style="width: 80.2px;" aria-sort="ascending">Mã PH</th>
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1" aria-label="Ngày: activate to sort column descending"
                                                 style="width: 80.2px;" aria-sort="ascending">Ngày</th>
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Người nhập: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Người nhập</th>
+                                                colspan="1" aria-label="Người xuất: activate to sort column descending"
+                                                style="width: 80.2px;" aria-sort="ascending">Người hủy</th>
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1" aria-label="Chi tiết: activate to sort column descending"
                                                 style="width: 80.2px;" aria-sort="ascending">Chi tiết</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        @foreach($phieunhap as $product)
-                                        <tr>
+                                        @foreach($phieuhuy as $product)
+                                        <tr">
                                             <td>{{$product->ma}}{{$product->id}}</td>
-                                            <td>{{$product->cuahang->TenCH}}</td>
                                             <td>{{$product->Ngay}}</td>
                                             <td>{{$product->User->name}}</td>
-                                            <!-- <td><i class="fa fa-pencil fa-fw"></i><a href="ctpnhap/{{$product->id}}">Xem
-                                                    thêm</a></td> -->
                                             <td><i class="fa fa-pencil fa-fw"></i><a href="#" data-toggle="modal" data-target="#{{$product->id}}">Chi tiết</a>
                                             </td>
-                                        </tr>
-                                        @endforeach
+                                            </tr>
+                                            @endforeach
 
                                     </tbody>
 
                                     </tfoot>
                                 </table>
+
                             </div>
+                            <!-- /.box-body -->
                         </div>
                         <!-- /.box -->
                     </div>
@@ -117,10 +110,12 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
+
+
     </div>
     <!-- ./wrapper -->
 
-    @foreach($phieunhap as $hh)
+    @foreach($phieuhuy as $hh)
     <div class="modal fade" id="{{$hh->id}}">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -137,8 +132,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($ctpnhap as $gv)
-                            @if($gv->id_phieunhap == $hh->id)
+                            @foreach($ctphuy as $gv)
+                            @if($gv->id_phieuhuy == $hh->id)
                             <tr>
                                 <td>{{$gv->Ten}}</td>
                                 <td>{{$gv->SoLuong}}</td>
@@ -157,7 +152,6 @@
         </div>
     </div>
     @endforeach
-
 
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
@@ -180,11 +174,11 @@
         $('#example1').DataTable()
         $('#example2').DataTable({
             'paging': true,
-            'lengthChange': true,
-            'searching': true,
+            'lengthChange': false,
+            'searching': false,
             'ordering': true,
             'info': true,
-            'autoWidth': true
+            'autoWidth': false
         })
     })
     </script>

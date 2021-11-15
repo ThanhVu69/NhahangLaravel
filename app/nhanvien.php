@@ -20,8 +20,12 @@ class nhanvien extends Model
     {
         return $this->hasMany('App\phieuxuat','id_nhanvien','id');
     }
-    public function hangto()
+    public function phieuhuy()
     {
-        return $this->hasMany('App\hangto','id_nhanvien','id');
+        return $this->hasMany('App\phieuhuy','id_nhanvien','id');
+    }
+    public function phieuton()
+    {
+        return $this->hasMany('App\phieuton','id_nhanvien','id');
     }
 }

@@ -14,43 +14,42 @@ use App\phieunhap;
 use App\phieuxuat;
 use App\ctpnhap;
 use App\ctpxuat;
+use App\hanghoa;
 
 class PhieuNhapXuatController extends Controller
 {
 //Phiếu nhập
     public function phieunhap()
     {
+    $ctpnhap= DB::table('ctpnhap')-> join('phieunhap','phieunhap.id','=','ctpnhap.id_phieunhap') 
+                                  -> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')->get();
     $phieunhap= phieunhap::all();
-    return view('phieunhap.phieunhap',compact('phieunhap'));
+    return view('phieunhap.phieunhap',compact('phieunhap','ctpnhap'));
     }
 //Phiếu nhập ngày
     public function phieunhapngay(Request $request)
     {   
         $product = phieunhap::where('Ngay','=',$request->Ngay)->get();
-        return view('phieunhap.phieunhapngay',['product'=>$product]);
+        $ctpnhap= DB::table('ctpnhap')-> join('phieunhap','phieunhap.id','=','ctpnhap.id_phieunhap') 
+                                  -> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')->get();
+        return view('phieunhap.phieunhapngay',compact('product','ctpnhap'));
     }
-//Chi tiết phiếu nhập
-    public function ctpnhap($id)
-    {
-    $phieunhap= phieunhap::find($id);
-    $ctpnhap= ctpnhap::all();
-    $ctpnhap= ctpnhap::find($id);
-    $ctpnhap= ctpnhap::where('id_phieunhap','=',$id)->get();
-    return view('phieunhap.ctpnhap',['ctpnhap'=>$ctpnhap,'phieunhap'=>$phieunhap]);
-    }
-
 
 //Phiếu xuất
     public function phieuxuat()
     {
+    $ctpxuat= DB::table('ctpxuat')-> join('phieuxuat','phieuxuat.id','=','ctpxuat.id_phieuxuat') 
+                                  -> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')->get();
     $phieuxuat= phieuxuat::all();
-    return view('phieuxuat.phieuxuat',['phieuxuat'=>$phieuxuat]);
+    return view('phieuxuat.phieuxuat',compact('phieuxuat','ctpxuat'));
     }
 //Phiếu xuất ngày
     public function phieuxuatngay(Request $request)
     {   
         $product = phieuxuat::where('Ngay','=',$request->Ngay)->get();
-        return view('phieuxuat.phieuxuatngay',['product'=>$product]);
+        $ctpxuat= DB::table('ctpxuat')-> join('phieuxuat','phieuxuat.id','=','ctpxuat.id_phieuxuat') 
+                                  -> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')->get();
+        return view('phieuxuat.phieuxuatngay',compact('product','ctpxuat'));
     }
 //Chi tiết phiếu xuất
     public function ctpxuat($id)
