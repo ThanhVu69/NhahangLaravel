@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\hdban;
 use App\cthdban;
+use App\monan;
 
 class HoadonController extends Controller
 {
