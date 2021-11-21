@@ -28,4 +28,12 @@ class nhanvien extends Model
     {
         return $this->hasMany('App\phieuton','id_nhanvien','id');
     }
+    public function phieutra()
+    {
+        return $this->hasMany('App\phieutra','id_nhanvien','id');
+    }
+    public function phieuchi()
+    {
+        return $this->hasMany('App\phieuchi','id_nhanvien','id');
+    }
 }

@@ -8,9 +8,9 @@ class phieuton extends Model
 {
     protected $table = "phieuton";
     
-    public function ctphuy()
+    public function ctpton()
     {
-        return $this->hasMany('App\ctpton','id_phieuhuy','id');
+        return $this->hasMany('App\ctpton','id_phieuton','id');
     }
     public function nhanvien()
     {

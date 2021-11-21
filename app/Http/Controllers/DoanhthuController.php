@@ -34,32 +34,41 @@ class DoanhthuController extends Controller
     public function doanhthu()
     {
     $total = DB::table('cthdban')->sum('TongTien');
-    $tra =DB::table('cthdban')->whereBetween('id_monan',[35,36])
-    ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(TongTien) as DT'))
-    ->groupBy('date')
-    ->get();
     $cthdban= cthdban::all();
-    $dtmonan =DB::table('cthdban')
-      ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(TongTien) as DT'))
+
+//Doanh thu theo ngày
+    $dtmonan =DB::table('hdban')
+      ->select(DB::raw('DATE(Ngay) as date'), DB::raw('SUM(ThanhTien) as DT'), DB::raw('COUNT(id) as HD'))
       ->groupBy('date')
       ->get();
-    $dtthang =DB::table('cthdban')
-      ->select(DB::raw('MONTH(created_at) as date'), DB::raw('SUM(TongTien) as DT'))
+    $dtthang =DB::table('hdban')
+      ->select(DB::raw('MONTH(Ngay) as date'), DB::raw('SUM(ThanhTien) as DT'))
       ->groupBy('date')
       ->get();
-    $dtnam =DB::table('cthdban')
-      ->select(DB::raw('YEAR(created_at) as date'), DB::raw('SUM(TongTien) as DT'))
+    $dtnam =DB::table('hdban')
+      ->select(DB::raw('YEAR(created_at) as date'), DB::raw('SUM(ThanhTien) as DT'))
       ->groupBy('date')
       ->get();
-    return view('doanhthu.doanhthu',compact('total','cthdban','dtmonan','dtthang','dtnam','tra','dthanghoa'));
+
+    //Top món ăn của ngày
+    $day = Carbon::today()->toDateString();
+    $bieudo = cthdban::where('Ngay',$day)
+    ->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
+    ->orderBy('TT','DESC')->skip(0)->take(7)->get();
+
+    return view('doanhthu.doanhthu',compact('total','cthdban','dtmonan','dtthang','dtnam','day','dthanghoa','bieudo'));
     }
 
-//Doanh thu ngày
+//Doanh thu lọc theo ngày
     public function doanhthungay(Request $request)
     {   
-        $total = DB::table('cthdban')->where('Ngay','=',$request->Ngay)->sum('TongTien');
-        $dthanghoa = cthdban::where('Ngay','=',$request->Ngay)->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')->get();
-        return view('doanhthu.doanhthungay',compact('total','dthanghoa'));
+        $total = DB::table('cthdban')->whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->sum('TongTien');
+        $dthanghoa = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')->get();
+        $bieudo = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
+        ->orderBy('TT','DESC')->skip(0)->take(7)->get();
+        $ngay1 = $request->Ngay1;
+        $ngay2 = $request->Ngay2;
+        return view('doanhthu.doanhthungay',compact('total','dthanghoa','ngay1','ngay2','bieudo'));
     }
 //Excel doanh thu ngày
     public function exceldoanhthungay(Request $request)

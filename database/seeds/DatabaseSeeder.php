@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
                 'SDT'=>'0123456789',
                 'DiaChi'=>'Cầu Giấy',
                 'quyen'=> '1',
-                'ChucVu'=>'Quản Lý'
+                'ChucVu'=>'Quản Lý',
             ]
         );
     }

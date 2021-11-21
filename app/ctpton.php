@@ -10,7 +10,7 @@ class ctpton extends Model
     
     public function phieuton()
     {
-        return $this->belongsTo('App\phieuton','id_phieuhuy','id');
+        return $this->belongsTo('App\phieuton','id_phieuton','id');
     }
     public function monan()
     {

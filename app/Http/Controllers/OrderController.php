@@ -44,7 +44,7 @@ class OrderController extends Controller
     {
     return view('order.giohang');
     }
-    public function posgiohang(Request $request)
+    public function postgiohang(Request $request)
     {   
         $cart = session()->get('cart');
         $bill = new hdban; 
@@ -75,10 +75,10 @@ class OrderController extends Controller
     session()->forget('cart');
     echo"<script>
         alert('Order thành công!');
-        window.location = ' ".url('trangchu')."'
+        window.location = ' ".url('hoadonban')."'
         </script>";
     }
-    //Thêm giỏ hàng
+//Thêm giỏ hàng
     public function themgiohang($id)
     {
         $product = monan::find($id);
@@ -88,6 +88,7 @@ class OrderController extends Controller
             abort(404);
         }
         $cart = session()->get('cart');
+        
         // if cart is empty then this the first product
         if(!$cart) {
             $cart = [
@@ -148,9 +149,7 @@ class OrderController extends Controller
 
                 session()->put('cart', $cart);
             }
-
             session()->flash('success', 'Product removed successfully');
-            
         }
     }
 }

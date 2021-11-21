@@ -49,92 +49,189 @@
             <section class="content">
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="box">
+                        <div class="box box-success">
                             <div class="box-header">
                                 <h3 class="box-title">Danh sách hóa đơn bán</h3><br>
                                 <div class="col-xs-4">
                                     <form action="hdbanngay" method="get">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                         <div class="form-group">
-                                            <h5 style=" text-align: center"><label>Ngày</label></h5>
-                                            <input id="date-order" type="date" name="Ngay" class="form-control datepk"
-                                                placeholder="" required />
-                                            <input type="submit" name="submit" value="Tra cứu"
-                                                class="btn btn-primary" />
+                                            <div class="col-xs-6">
+                                                <h5 style=" text-align: center"><label>Từ ngày</label></h5>
+                                                <input id="date-order" type="date" name="Ngay1"
+                                                    class="form-control datepk" placeholder="" required />
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <h5 style=" text-align: center"><label>Đến ngày</label></h5>
+                                                <input id="date-order" type="date" name="Ngay2"
+                                                    class="form-control datepk" placeholder="" required />
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <input type="submit" name="submit" value="Tra cứu"
+                                                    class="btn btn-primary" />
+                                            </div>
                                         </div>
+                                    </form>
                                 </div>
-                                </form>
                             </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                @if(session('thongbao'))
-                                <div class="alert alert-success">
-                                    {{session('thongbao')}}
-                                </div>
-                                @endif
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <!-- /.box-header -->
+                        <div class="box box-info">
+                            <div class="box-header">
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr role="row">
                                             <th>Mã HĐ</th>
                                             <th>Ngày</th>
-                                            <th>Nhân viên bán hàng</th>
-                                            <th> Tổng Tiền</th>
-                                            <th>Bàn số</th>
-                                            <th>Trạng thái</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Bàn</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                         @foreach($hoadonban as $product)
                                         <tr style=" text-align: center">
-                                            <td>{{$product->ma}}{{$product->id}}</td>
-                                            <td>{{$product->Ngay}}</td>
-                                            <td>{{$product->User->name}}</td>
+                                            <td><a href="#" class="label-success label"><i class="fa fa-check"></i></a>
+                                                {{$product->ma}}{{$product->id}}</td>
+                                            <td>{{date('d/m/Y',strtotime($product->Ngay))}}</td>
                                             <td>{{$product->ThanhTien}}.000VNĐ</td>
                                             <td>{{$product->soban}}</td>
-                                            <td>
-                                                @if ($product->trangthai==1)
-                                                <a href="#" class="label-success label">Đã xử lý</a>
-                                                @else
-                                                <a href="#" class="label label-default">Chờ xử lý</a>
-                                                @endif
-                                            </td>
-                                            <td><a href="thanhtoanoff/{{$product->id}}"
-                                                    class="btn btn-success btn-sm">Thanh toán</a></td>
-                                            <td><a href="cthdban/{{$product->id}}" class="btn btn-primary btn-sm">Chi
-                                                    tiết</a></td>
-                                            @if ($product->trangthai!=1)
-                                            <td><a href="xoahdban/{{$product->id}}" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a></td>
-                                            @else
-                                            <td></td>
-                                            @endif
+                                            <td><a href="#" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-target="#{{$product->id}}1"><i class="fa fa-info"></i></a></td>
                                         </tr>
                                         @endforeach
-
                                     </tbody>
-
-                                    </tfoot>
                                 </table>
-
                             </div>
-                            <!-- /.box-body -->
                         </div>
-                        <!-- /.box -->
                     </div>
-                    <!-- /.col -->
+                    <div class="col-xs-6">
+                        <!-- /.box-header -->
+                        <div class="box box-danger" style="min-height:620px">
+                            <div class="box-header">
+                                <table id="example2" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Mã HĐ</th>
+                                            <th>Ngày</th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Bàn</th>
+                                            <th>Thanh toán</th>
+                                            <th>Thêm</th>
+                                            <th>Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($hoadoncho as $product)
+                                        <tr style=" text-align: center">
+                                            <td>{{$product->ma}}{{$product->id}}</td>
+                                            <td>{{date('d/m/Y',strtotime($product->Ngay))}}</td>
+                                            <td>{{$product->ThanhTien}}.000VNĐ</td>
+                                            <td>{{$product->soban}}</td>
+                                            <td><a href="thanhtoanoff/{{$product->id}}"
+                                                    class="btn btn-primary btn-sm"><i
+                                                        class="fa fa-arrow-circle-right"></i></a></td>
+                                            <td><a href="cthdban/{{$product->id}}" class="btn btn-warning btn-sm"><i
+                                                        class="fa fa-plus-circle"></i></a></td>
+                                            <td><a href="xoahdban/{{$product->id}}" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')"><i
+                                                        class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.row -->
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
-
     </div>
     <!-- ./wrapper -->
+
+    <!-- Thanh toán -->
+    @foreach($hoadonban as $product)
+    <div class="modal fade" id="{{$product->id}}1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b style="color:#008d4c">Đã thanh toán</b></h5>
+                    <h5 class="modal-title"><b>Bàn số {{$product->soban}}</b></h5>
+                    <h5 class="modal-title"><b>Nhân viên bán hàng: {{$product->User->name}}</b></h5>
+                    <h5 class="modal-title"><b>Phương thức thanh toán: {{$product->phuongthucthanhtoan}}</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style=" text-align: center">Tên món ăn</th>
+                                        <th style=" text-align: center">Số lượng</th>
+                                        <th style=" text-align: center">Đơn giá</th>
+                                        <th style=" text-align: center">Thành tiền (nghìn VNĐ)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($cthdban as $gv)
+                                    @if($gv->id_hoadonban == $product->id)
+                                    <tr style=" text-align: center">
+                                        <td>{{$gv->monan->Ten}}</td>
+                                        <td>{{$gv->SoLuong}}</td>
+                                        <td>{{$gv->Dongia}}</td>
+                                        <td>{{$gv->TongTien}}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6" align="center">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label><b style="color: #3c8dbc">Tổng tiền:</b>
+                                            {{$product->ThanhTien}}.000VNĐ</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><b style="color: #3c8dbc">Khuyến mãi:</b></label>
+                                        @if($product->khuyenmai == 0)
+                                        <b>{{$product->khuyenmaivnd}}.000VNĐ</b>
+                                        @else
+                                        <b>{{$product->khuyenmai}} %</b>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" align="center">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label><b style="color: #3c8dbc">Khách trả:</b>
+                                            {{$product->khachtra}}.000VNĐ</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><b style="color: #3c8dbc">Trả lại khách:</b>
+                                            {{$product->tralai}}.000VNĐ</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @endforeach
 
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
@@ -155,6 +252,7 @@
     <script>
     $(function() {
         $('#example1').DataTable()
+        $('#example4').DataTable()
         $('#example2').DataTable({
             'paging': true,
             'lengthChange': true,
@@ -165,6 +263,7 @@
         })
     })
     </script>
+
 </body>
 
 </html>

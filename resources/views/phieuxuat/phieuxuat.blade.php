@@ -54,46 +54,52 @@
                                     <form action="phieuxuatngay" method="get">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                         <div class="form-group">
-                                            <h5 style=" text-align: center"><label>Ngày</label></h5>
-                                            <input id="date-order" type="date" name="Ngay" class="form-control datepk"
-                                                placeholder="" required />
-                                            <input type="submit" name="submit" value="Tra cứu"
-                                                class="btn btn-primary" />
+                                            <div class="col-xs-6">
+                                                <h5 style=" text-align: center"><label>Từ ngày</label></h5>
+                                                <input id="date-order" type="date" name="Ngay1"
+                                                    class="form-control datepk" placeholder="" required />
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <h5 style=" text-align: center"><label>Đến ngày</label></h5>
+                                                <input id="date-order" type="date" name="Ngay2"
+                                                    class="form-control datepk" placeholder="" required />
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <input type="submit" name="submit" value="Tra cứu"
+                                                    class="btn btn-primary" />
+                                            </div>
                                         </div>
+                                    </form>
                                 </div>
-                                </form>
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Mã PX: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Mã PX</th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Cửa hàng: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Cửa hàng</th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Ngày: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Ngày</th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Người xuất: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Người xuất</th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
-                                                colspan="1" aria-label="Chi tiết: activate to sort column descending"
-                                                style="width: 80.2px;" aria-sort="ascending">Chi tiết</th>
+                                            <th>Mã PX</th>
+                                            <th>Ngày</th>
+                                            <th>Người xuất</th>
+                                            <th>Tổng tiền</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($phieuxuat as $product)
                                         <tr">
                                             <td>{{$product->ma}}{{$product->id}}</td>
-                                            <td>{{$product->cuahang->TenCH}}</td>
-                                            <td>{{$product->Ngay}}</td>
+                                            <td>{{date('d/m/Y',strtotime($product->Ngay))}}</td>
                                             <td>{{$product->User->name}}</td>
-                                            <td><i class="fa fa-pencil fa-fw"></i><a href="#" data-toggle="modal" data-target="#{{$product->id}}">Chi tiết</a>
+                                            <td>{{$product->ThanhTien}}.000VNĐ</td>
+                                            <td></i><a href="#" data-toggle="modal" class="btn btn-primary btn-sm"
+                                                    data-target="#{{$product->id}}">Chi tiết</a>
                                             </td>
+                                            <td><a href="ctpxuat/{{$product->id}}"
+                                                    class="btn btn-primary btn-sm">Sửa</a></td>
+                                            <td><a href="xoaphieuxuat/{{$product->id}}" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a></td>
                                             </tr>
                                             @endforeach
 
@@ -132,6 +138,8 @@
                             <tr role="row">
                                 <th>Tên</th>
                                 <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
                                 <th>Đơn vị tính</th>
                             </tr>
                         </thead>
@@ -141,6 +149,8 @@
                             <tr>
                                 <td>{{$gv->Ten}}</td>
                                 <td>{{$gv->SoLuong}}</td>
+                                <td>{{$gv->Dongia}}</td>
+                                <td>{{$gv->TongTien}}</td>
                                 <td>{{$gv->DVTinh}}</td>
                             </tr>
                             @endif

@@ -39,53 +39,88 @@
     <div class="wrapper">
         @include('trangquanly.header')
         @include('trangquanly.thanhmenu')
+
         <div class="content-wrapper">
             <section class="content-header">
-                <a href="{{asset('hoadonban')}}" class="btn btn-success btn-sm">Quay lại hóa đơn bán</a>
+            <a href="{{url('hoadonban')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> Trở về hóa đơn bán</a><br><br>
             </section>
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box">
+                    <div class="col-xs-6" align=center>
+                        <div class="box box-info" style="min-height:500px">
                             <div class="box-header">
-                                <h3 class="box-title">Bánh cuốn Gia An</h3>
+                                @if ($hoadonban->trangthai !=1)
+                                <form action="cthdban" method="post">
+                                    <input type="hidden" name="_token" value="{{csrf_token()}}" />
+                                    <div class="form-group">
+                                        <input type="hidden" value="{{$hoadonban->id}}" name="id_hoadonban"
+                                            id="id_hoadonban" class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tên món ăn</label>
+                                        <select class="form-control" style="width:400px" name="id_monan" id="id_monan"
+                                            placeholder="Thêm món ăn">
+                                            @foreach($monan as $ma)
+                                            <option value="{{$ma->id}}">{{$ma->Ten}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @foreach($ct as $ct)
+                                    <input type="hidden" name="id_monandaco[{!! $ct->id_monan !!}]"
+                                        value="{{$ct->id_monan}}" />
+                                    @endforeach
+                                    <div class="form-group">
+                                        <label>Số lượng</label>
+                                        <input type="number" name="SoLuong" style="width:100px" id="SoLuong"
+                                            class="form-control" value="1" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" value="{{$hoadonban->ThanhTien}}" name="ThanhTien"
+                                            id="ThanhTien" class="form-control" required />
+                                    </div>
+                                    <input type="submit" name="submit" value="Thêm món ăn" class="btn btn-primary" />
+                                </form>
+                                @endif
                             </div>
-                            <!-- /.box-header -->
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="box box-danger" style="min-height:500px">
+                            <div class="box-header">
+                                <h3 class="box-title">Thêm món ăn</h3><br>
+                                <h3 class="box-title">Bàn số: {{$hoadonban -> soban}}</h3>
+                            </div>
                             <div class="box-body">
                                 @if(session('thongbao'))
-                                <div class="alert alert-info">
-                                    {{session('thongbao')}}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <strong>{{session('thongbao')}}</strong> Vui lòng cập nhật lại số lượng!
                                 </div>
                                 @endif
-                                <!-- info row -->
-                                <div class="row invoice-info">
-                                    <div class="col-sm-4 invoice-col">
-
-                                        <address>
-                                            <strong>Công ty CP Toàn Phong</strong><br>
-                                            Số 70 Trung Hòa, Phường Trung Hòa, Quận Cầu Giấy, Hà Nội<br>
-                                            024 32321696<br>
-                                            <a href="accounting@toanphong.com.vn">accounting@toanphong.com.vn</a><br>
-                                            GPĐKKD: 0104133621 do sở Kế hoạch và đầu từ Hà Nội cấp ngày 26/08/2009
-                                        </address>
-                                    </div>
-                                    <div class="col-sm-4 invoice-col">
-                                        <address>
-                                            <strong>Cơ sở Nguyễn Văn Lộc</strong><br>
-                                            Số 1, dãy 16B5, Làng Việt Kiều Châu Âu, Nguyễn Văn Lộc<br>
-                                            (024) 66 56 54 05<br>
-                                            Thời gian phục vụ: 6h-21h<br>
-                                            Số chỗ: 60 chỗ
-                                        </address>
-                                    </div>
-                                    <div class="col-sm-4 invoice-col">
-                                        <strong>Mã HĐ: </strong> {{$hoadonban->ma}}{{$hoadonban->id}}<br><br>
-                                        <strong>Ngày: </strong>{{$hoadonban->Ngay}}<br><br>
-                                        <strong>Bàn số: </strong>{{$hoadonban->soban}}<br><br>
-                                        <strong>Nhân viên: </strong>{{$hoadonban->User->name}}
-                                    </div>
+                                @if(session('thanhcong'))
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <strong>{{session('thanhcong')}}</strong> Số lượng món ăn đã được thay đổi!
                                 </div>
+                                @endif
+                                @if(session('xoathanhcong'))
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <strong>{{session('xoathanhcong')}}</strong>
+                                </div>
+                                @endif
+                                @if(session('khongthexoa'))
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <strong>{{session('khongthexoa')}}</strong><span> Món ăn không thể xóa khi chỉ còn 1 loại món ăn</span>
+                                </div>
+                                @endif
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
@@ -94,101 +129,97 @@
                                             <th style=" text-align: center">Đơn giá</th>
                                             <th style="width:200px;text-align: center">Thành tiền (nghìn VNĐ)</th>
                                             <th></th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($cthdban as $cthdban)
                                         <tr style=" text-align: center">
                                             <td>{{$cthdban->monan->Ten}}</td>
-                                            <td>{{$cthdban->SoLuong}}</td>
-                                            <td>{{$cthdban->Dongia}}</td>
-                                            <td>{{$cthdban->TongTien}}</td>
-                                            @if ($hoadonban -> trangthai ==1)
-                                            <td><a href="#" class="btn btn-primary btn-sm"
-                                                    onclick="return confirm('Không thể sửa')">Sửa</a></td>
-                                            <td><a href="#" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Không thể xóa')">Xóa</a></td>
-                                            @else
-                                            <td><a href="/cthdban/suacthdban/{{$cthdban->id}}"
-                                                    class="btn btn-primary btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn sửa?')">Sửa</a></td>
-                                            <td><a href="/cthdban/xoacthdban/{{$cthdban->id}}"
-                                                    class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Chú ý: Còn 1 loại món ăn sẽ không thể xóa')">Xóa</a>
+                                            <td><input style="width:70px; text-align:center" type="number"
+                                                    value="{{$cthdban->SoLuong}}" readonly />
+                                                <a href="#" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-target="#{{$cthdban->id}}">Cập nhật</a>
                                             </td>
-                                            @endif
-
+                                            <td>{{$cthdban->Dongia}}</td>
+                                            <!-- <a href="/cthdban/suacthdban/{{$cthdban->id}}"
+                                                    class="btn btn-primary btn-sm">Cập nhật</a> -->
+                                            <td>{{$cthdban->TongTien}}</td>
+                                            <td><a href="/cthdban/xoacthdban/{{$cthdban->id}}"
+                                                    class="btn btn-danger btn-sm">Xóa</a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
-                                    </tfoot>
-                                    <div class="row">
-                                        <div class="col-md-6"></div>
-                                        <div class="col-xs-6" style=" text-align: center">
-                                            <table id="example2" class="table table-bordered table-hover">
-                                                <thead><br>
-                                                    <th
-                                                        style=" text-align: right;color: red; background-color: #FFFF99">
-                                                        Tổng tiền: {{$hoadonban->ThanhTien}}.000VNĐ</th>
-                                                    <tr>
-                                                        <td class="table-empty" colspan="2">
-                                                            <div class="form-group">
-                                                                @if ($hoadonban->trangthai !=1)
-                                                                <label style="color:red ">Thêm món ăn</label><br>
-                                                                <form action="cthdban" method="post">
-                                                                    <input type="hidden" name="_token"
-                                                                        value="{{csrf_token()}}" />
-                                                                    <div class="form-group">
-                                                                        <input type="hidden" value="{{$hoadonban->id}}"
-                                                                            name="id_hoadonban" id="id_hoadonban"
-                                                                            class="form-control" required />
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Tên món ăn</label>
-                                                                        <select class="form-control" style="width:400px"
-                                                                            name="id_monan" id="id_monan"
-                                                                            placeholder="Thêm món ăn">
-                                                                            @foreach($monan as $ma)
-                                                                            <option value="{{$ma->id}}">{{$ma->Ten}}
-                                                                            </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Số lượng</label>
-                                                                        <input type="number" name="SoLuong"
-                                                                            style="width:100px" id="SoLuong"
-                                                                            class="form-control" value="1" required />
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <input type="hidden"
-                                                                            value="{{$hoadonban->ThanhTien}}"
-                                                                            name="ThanhTien" id="ThanhTien"
-                                                                            class="form-control" required />
-                                                                    </div>
-                                                                    <input type="submit" name="submit"
-                                                                        value="Thêm món ăn" class="btn btn-primary" />
-                                                            </div>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-
-                                            </table>
-
-                                        </div>
+                                </table>
+                                <div class="box-header">
+                                    <div class="form-group">
+                                        <label><b style="color: #d73925">Tổng tiền:</b></label>
+                                        {{$hoadonban->ThanhTien}}.000VNĐ
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        </div>
-        </section>
-    </div>
+                    <div class="col-md-6" align=center>
 
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
     @include('trangquanly.footer')
     </div>
+
+    <!-- Sửa chi tiết hóa đơn -->
+    @foreach($cthdb as $ct)
+    <div class="modal fade" id="{{$ct->id}}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form action="/suacthdban" method="post">
+                                <input type="hidden" name="_token" value="{{csrf_token()}}" />
+                                <div class="form-group">
+                                    <input type="hidden" name="id_monan" value="{{$ct->id_monan}}" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Số lượng</label>
+                                    <input type="number" name="SoLuong" class="form-control" value="{{$ct->SoLuong}}" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" value="{{$ct->Dongia}}" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="Dongia" class="form-control" value="{{$ct->Dongia}}" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" value="{{$ct->TongTien}}" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="TongTien" class="form-control"
+                                        value="{{$ct->TongTien}}" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="ThanhTien" class="form-control"
+                                        value="{{$ct->hdban->ThanhTien}}" />
+                                </div>
+                                <input type="hidden" name="id_hoadon" value="{{$ct->id_hoadonban}}" />
+                                <input type="hidden" name="id" value="{{$ct->id}}" />
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
 
     <!-- jQuery 3 -->
     <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
@@ -211,7 +242,6 @@
     <script src="{{asset('dist/js/pages/dashboard2.js')}}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset('dist/js/demo.js')}}"></script>
-
 
 </body>
 

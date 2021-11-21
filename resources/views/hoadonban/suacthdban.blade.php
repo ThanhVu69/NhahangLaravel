@@ -69,7 +69,6 @@
                     <label>Số lượng</label>
                     <input type="number" name="SoLuong" class="form-control" value="{{$cthdban->SoLuong}}" />
                 </div>
-
                 <div class="form-group">
                     <label>Đơn giá</label>
                     <option type="number" class="form-control" value="{{$cthdban->Dongia}}">{{$cthdban->Dongia}}
@@ -89,10 +88,7 @@
                 <div class="form-group">
                     <input type="hidden" name="ThanhTien" class="form-control" value="{{$cthdban->hdban->ThanhTien}}" />
                 </div>
-
-
                 <button type="submit" class="btn btn-primary">Sửa</button>
-
             </form>
         </div>
     </div>

@@ -23,9 +23,6 @@
 
         <div class="content-wrapper">
             <section class="content-header">
-                @if($xem_ac[0]->quyen==1)
-                <a href="themmonan" class="btn btn-primary">Thêm món ăn</a><br>
-                @endif
             </section>
             @if(session('thongbao'))
             <div class="alert alert-info">
@@ -34,24 +31,26 @@
             @endif
             <section class="content">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-8">
                         <div class="box">
                             <div class="box-header">
+                                @if($xem_ac[0]->quyen==1)
+                                <a href="#" data-toggle="modal" class="btn btn-primary" data-target="#themmonan"><i
+                                        class="fa fa-plus"></i></a>
+                                @endif <br><br>
                                 <h3 class="box-title">Danh sách món ăn</h3>
                             </div>
                             <div class="box-body">
-                                <table id="example1" class="table table-bordered table-hover">
+                                <table id="example1" class="table table-bordered table-hover"
+                                    style="text-align: center">
                                     <thead>
                                         <tr role="row">
                                             <th></th>
-                                            <th>Mã MA</th>
+                                            <th>Mã</th>
                                             <th>Tên</th>
-                                            <th>Thuộc loại món ăn</th>
+                                            <th>Loại</th>
                                             <th>Đơn giá</th>
-                                            <th>Giá khuyến mãi</th>
                                             <th>Đơn vị tính</th>
-                                            <th>Mô tả</th>
-                                            <th></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -59,20 +58,23 @@
                                         @foreach($monan as $hh)
                                         <tr>
                                             <td><img style="width: auto; height:50px;"
-                                                src="upload/monan/{{$hh->image}}" /></td>
-                                            <td style="width:10%;">{{$hh->ma}}</td>
-                                            <td style="width:20%;">{{$hh->Ten}}</td>
+                                                    src="upload/monan/{{$hh->image}}" /></td>
+                                            <td>{{$hh->ma}}{{$hh->id}}</td>
+                                            <td>{{$hh->Ten}}</td>
                                             <td>{{$hh->loaimonan->ten}}</td>
                                             <td>{{$hh->dongia}}</td>
-                                            <td>{{$hh->khuyenmai}}</td>
                                             <td>{{$hh->DVTinh}}</td>
-                                            <td style="width:50%;">{{$hh->mota}}</td>
-                                            <td><a href="xoamonan/{{$hh->id}}"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
-                                                    class="btn btn-danger btn-sm">Xóa</a></td>
-                                            <td><a href="suamonan/{{$hh->id}}"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn sửa?')"
-                                                    class="btn btn-info btn-sm">Sửa</a></td>
+                                            <td>
+                                                <div class="col-xs-6">
+                                                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                        data-target="#{{$hh->id}}"><i class="fa fa-wrench"></i></a>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <a href="xoamonan/{{$hh->id}}"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa?')"
+                                                        class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -81,11 +83,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xs-4">
+                    @include('monan.loaimonan')
+                    </div>
                 </div>
             </section>
         </div>
     </div>
-  
+
+    <!-- Thêm món ăn -->
+    @include('monan.themma')
+
+    <!-- Sửa món ăn -->
+    @include('monan.suama')
+
+    <!-- Chi tiết món ăn -->
+    @include('monan.chitietmonan')
+
+    <!-- Thêm loại món ăn -->
+    @include('monan.themloaima')
+
+    <!-- Sửa loại món ăn -->
+    @include('monan.sualoaima')
+
     <!-- jQuery 3 -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->

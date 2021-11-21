@@ -38,62 +38,21 @@
         @include('trangquanly.header')
         @include('trangquanly.thanhmenu')
         <div class="content-wrapper">
-            <section class="content-header">
-                <h1>
-                    Công ty CP Toàn Phong
-                    <small>Bánh cuốn Gia An</small>
-                </h1><br>
-            </section>
-            <!-- Main content -->
             <section class="content">
+                <button class="btn btn-info"><i class="fa fa-arrow-left"></i> Trở về hóa đơn bán</a></button><br><br>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box">
-                            <div class="box-header">
-                                <h3 class="box-title">Bánh cuốn Gia An</h3>
-                            </div>
-                            <!-- /.box-header -->
+                    <div class="col-xs-6">
+                        <div class="box box-primary" style="min-height: 500px">
                             <div class="box-body">
-                                @if(session('thongbao'))
-                                <div class="alert alert-info">
-                                    {{session('thongbao')}}
-                                </div>
-                                @endif
-                                <!-- info row -->
-                                <div class="row invoice-info">
-                                    <div class="col-sm-4 invoice-col">
-
-                                        <address>
-                                            <strong>Công ty CP Toàn Phong</strong><br>
-                                            Số 70 Trung Hòa, Phường Trung Hòa, Quận Cầu Giấy, Hà Nội<br>
-                                            024 32321696<br>
-                                            <a href="accounting@toanphong.com.vn">accounting@toanphong.com.vn</a><br>
-                                            GPĐKKD: 0104133621 do sở Kế hoạch và đầu từ Hà Nội cấp ngày 26/08/2009
-                                        </address>
-                                    </div>
-                                    <div class="col-sm-4 invoice-col">
-                                        <address>
-                                            <strong>Cơ sở Nguyễn Văn Lộc</strong><br>
-                                            Số 1, dãy 16B5, Làng Việt Kiều Châu Âu, Nguyễn Văn Lộc<br>
-                                            (024) 66 56 54 05<br>
-                                            Thời gian phục vụ: 6h-21h<br>
-                                            Số chỗ: 60 chỗ
-                                        </address>
-                                    </div>
-                                    <div class="col-sm-4 invoice-col">
-                                        <strong>Mã HĐ: </strong> {{$hoadonban->ma}}{{$hoadonban->id}}<br><br>
-                                        <strong>Ngày: </strong>{{$hoadonban->Ngay}}<br><br>
-                                        <strong>Bàn số: </strong>{{$hoadonban->SoBan}}<br><br>
-                                        <strong>Nhân viên: </strong>{{$hoadonban->User->name}}
-                                    </div>
-                                </div>
+                                <h4>Mã hóa đơn: {{$hoadonban->ma}}{{$hoadonban->id}}</h4>
+                                <h4>Thời gian: {{$hoadonban->Ngay}}</h4><br>
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th style=" text-align: center">Tên món ăn</th>
                                             <th style=" text-align: center">Số lượng</th>
                                             <th style=" text-align: center">Đơn giá</th>
-                                            <th style="width:200px;text-align: center">Thành tiền (nghìn VNĐ)</th>
+                                            <th style="width:200px;text-align: center">Thành tiền</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -102,98 +61,94 @@
                                             <td>{{$cthdban->monan->Ten}}</td>
                                             <td>{{$cthdban->SoLuong}}</td>
                                             <td>{{$cthdban->Dongia}}</td>
-                                            <td>{{$cthdban->TongTien}}</td>
+                                            <td>{{number_format($cthdban->TongTien)}}.000VNĐ</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                     </tfoot>
-                                    <div class="row">
-                                        <div class="col-md-6"></div>
-                                        <div class="col-xs-6" style=" text-align: center">
-                                            <table id="example2" class="table table-bordered table-hover">
-                                                <thead><br>
-                                                    <th
-                                                        style=" text-align: right;color: red; background-color: #FFFF99">
-                                                        Tổng tiền: {{$hoadonban->ThanhTien}}.000VNĐ</th>
-                                                    <tr>
-                                                        <td class="table-empty" colspan="2">
-                                                            <div class="form-group">
-                                                                @if ($hoadonban->trangthai !=1)
-                                                                <div class="col-xs-9"></div>
-                                                                <div class="col-xs-3" style=" text-align: left">
-                                                                    <label style="color:red ">Thanh toán</label><br>
-                                                                    <form action="thanhtoanoff" method="post">
-                                                                        <input type="hidden" name="_token"
-                                                                            value="{{csrf_token()}}" />
-                                                                        <div class="form-group">
-                                                                            <input type="hidden"
-                                                                                value="{{$hoadonban->id}}"
-                                                                                name="id_hoadonban" id="id_hoadonban"
-                                                                                class="form-control" required />
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Tổng tiền</label>
-                                                                            <option value="{{$hoadonban->ThanhTien}}"
-                                                                                id="sob" style="width:150px"
-                                                                                name="ThanhTien" class="form-control">
-                                                                                {{$hoadonban->ThanhTien}}</option>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <input type="hidden"
-                                                                                value="{{$hoadonban->ThanhTien}}"
-                                                                                id="sob" style="width:150px"
-                                                                                name="ThanhTien" class="form-control" />
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Khách trả</label>
-                                                                            <input type="number" name="Khachtra"
-                                                                                id="soa" style="width:150px"
-                                                                                class="form-control" required />
-                                                                        </div>
-                                                                        <input type="button" class="btn btn-info"
-                                                                            value="Trả lại khách" onClick="hieu()" />
-                                                                        <div class="form-group">
-                                                                            <div name="Tralai" id="ketqua"
-                                                                                style="width:150px"
-                                                                                class="form-control"> </div>
-                                                                        </div>
-                                                                        <input type="submit" name="submit"
-                                                                            value="Thanh toán >>"
-                                                                            class="btn btn-success" />
-                                                                </div>
-                                                            </div>
-
-                                                            @else
-                                                            <div class="col-xs-9"></div>
-                                                            <div class="col-xs-3" style=" text-align: left">
-                                                                <div class="form-group">
-                                                                    <option style="width:150px;">Khách trả:
-                                                                        {{$hoadonban->Khachtra}}.000VNĐ</option>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <option style="width:150px">Trả lại khách:
-                                                                        {{$hoadonban->Tralai}}.000VNĐ</option>
-                                                                </div>
-                                                            </div>
+                                </table><br>
+                                <h4>Tổng tiền: {{$hoadonban->ThanhTien}}.000VNĐ</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" align="center">
+                        <div class="box box-success">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <h4 style="color:red "><b>THANH TOÁN</b></h4>
+                                    <form action="thanhtoanoff" method="post">
+                                        <input type="hidden" name="_token" value="{{csrf_token()}}" />
+                                        <div class="form-group">
+                                            <input type="hidden" value="{{$hoadonban->id}}" name="id_hoadonban"
+                                                id="id_hoadonban" class="form-control" required />
                                         </div>
-                                        @endif
-                                        </td>
-                                        </tr>
-                                        <script>
-                                        function hieu() {
-                                            //Lấy dữ liệu từ textBox:
-                                            var a = document.getElementById("soa").value;
-                                            var b = document.getElementById("sob").value;
-                                            c = parseInt(a) - parseInt(b);
-                                            document.getElementById("ketqua").innerHTML = c;
-                                        }
-                                        </script>
-                                </table>
-
+                                        <div class="form-group">
+                                            <input type="hidden" value="{{$hoadonban->ThanhTien}}" id="sob"
+                                                style="width:150px" name="ThanhTien" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tổng tiền</label>
+                                            <option value="{{$hoadonban->ThanhTien}}" id="sob" style="width:150px"
+                                                name="ThanhTien" class="form-control">
+                                                {{$hoadonban->ThanhTien}}</option>
+                                        </div>
+                                        <label>Khuyến mãi</label>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-xs-6" align=right>
+                                                    <a href="#" class="label-success label"><i
+                                                            class="fa fa-percent"></i></a>
+                                                    <input type="number" name="khuyenmai1" id="soc" value=0
+                                                        onkeyup="mult();" style="width:100px" class="form-control"
+                                                        required />
+                                                </div>
+                                                <div class="col-xs-6" align=left>
+                                                    <a href="#" class="label-success label">VNĐ</a>
+                                                    <input type="number" name="khuyenmai2" id="sod" value=0
+                                                        onkeyup="mult();" style="width:100px" class="form-control"
+                                                        required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Phương thức thanh toán</label>
+                                            <select class="form-control" style="width:150px; text-align:center" name="phuongthuc"
+                                                id="phuongthuc">
+                                                <option value="Tiền mặt">Tiền mặt</option>
+                                                <option value="Thẻ ngân hàng">Thẻ ngân hàng</option>
+                                                <option value="Chuyển khoản">Chuyển khoản</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Khách trả</label>
+                                            <input type="number" name="Khachtra" id="soa" onkeyup="mult();"
+                                                style="width:150px" class="form-control" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Trả lại khách</label>
+                                            <input type="text" name="Tralai" id="ketqua" style="width:150px"
+                                                class="form-control">
+                                        </div>
+                                        <input type="submit" name="submit" value="Thanh toán >>"
+                                            class="btn btn-success" />
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <script>
+                function mult() {
+                    var a = document.getElementById("soa").value;
+                    var b = document.getElementById("sob").value;
+                    var c = document.getElementById("soc").value;
+                    var d = document.getElementById("sod").value;
+                    e = parseInt(a) - (parseInt(b) - (parseInt(b) * (parseInt(c) / 100)) - parseInt(d));
+                    document.getElementById('ketqua').value = e;
+                }
+                </script>
+                </table>
+
         </div>
     </div>
     </div>
@@ -224,7 +179,12 @@
     <script src="{{asset('dist/js/pages/dashboard2.js')}}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{asset('dist/js/demo.js')}}"></script>
-
+    <script>
+    let btnBack = document.querySelector('button');
+    btnBack.addEventListener('click', () => {
+        window.history.back();
+    });
+    </script>
 
 </body>
 

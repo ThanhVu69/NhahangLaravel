@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Session;
 
 use App\monan;
 use App\nhanvien;
-use App\cuahang;
 use App\hanghoa;
 use App\User;
 use App\vp_user;
@@ -37,15 +36,13 @@ class NhapXuatHanghoaController extends Controller
     public function nhaphangan()
     {
         $products = hanghoa::all();
- 
         return view('nhapxuathang.nhaphangan', compact('products'));
     }
 
 //Giỏ hàng hóa (nhập)
     public function getgiohangannhap()
     {
-        $cuahang=cuahang::all();
-        return view('nhapxuathang.giohangannhap',compact('cuahang'));
+        return view('nhapxuathang.giohangannhap');
     }
     public function postgiohangannhap(Request $request)
     {   
@@ -55,8 +52,10 @@ class NhapXuatHanghoaController extends Controller
         $bill->ma; 
         $user = User::all();
         $bill->id_nhanvien = Auth::user()->id;
-        $bill->id_cuahang= $request->id_cuahang;     
+        $bill->ThanhTien=0; 
+        // $bill->id_cuahang= $request->id_cuahang;     
         $bill->save();
+        $totally = 0; 
         // foreach ($cart as $key => $value) {
         //     $hanghoa = hanghoa::find($key);
         //     $hanghoa->Nhap += $value['quantity'];
@@ -69,12 +68,18 @@ class NhapXuatHanghoaController extends Controller
             $bill_detail->id_phieunhap = $bill->id;
             $bill_detail->id_hanghoa = $key;
             $bill_detail->SoLuong = $value['quantity'];
+            $bill_detail->Dongia = $value['price'];
+            $bill_detail->TongTien = ($value['price']*$value['quantity']);
+            $totally += $bill_detail->TongTien;
             $bill_detail->save();
         }
+        $total = phieunhap::find($bill->id);
+        $total->ThanhTien = $totally;
+        $total->save();
     session()->forget('cart');
     echo"<script>
         alert('Nhập hàng thành công!');
-        window.location = ' ".url('trangchu')."'
+        window.location = ' ".url('phieunhap')."'
         </script>";
     }
 
@@ -95,7 +100,8 @@ class NhapXuatHanghoaController extends Controller
                     "name" => $product->Ten,
                     "quantity" => 1,
                     "DVTinh"=> $product->DVTinh,
-                    "id_hanghoa"=> $product->id_hanghoa
+                    "id_hanghoa"=> $product->id_hanghoa,
+                    "price"=> $product->gia,
                     ]
                 ];
         session()->put('cart', $cart);
@@ -114,6 +120,7 @@ class NhapXuatHanghoaController extends Controller
         $cart[$id] = [
             "name" => $product->Ten,
             "quantity" => 1,
+            "price"=> $product->gia,
             "DVTinh"=> $product->DVTinh,
             "id_hanghoa"=> $product->id_hanghoa
         ];
@@ -146,9 +153,7 @@ class NhapXuatHanghoaController extends Controller
 
                 session()->put('cart', $cart);
             }
-
             session()->flash('success', 'Product removed successfully');
-            
         }
     }
 
@@ -162,8 +167,7 @@ class NhapXuatHanghoaController extends Controller
 //Giỏ hàng hóa (xuất)
     public function getgiohanganxuat()
     {
-        $cuahang=cuahang::all();
-        return view('nhapxuathang.giohanganxuat',compact('cuahang'));
+        return view('nhapxuathang.giohanganxuat');
     }
     public function postgiohanganxuat(Request $request)
     {   
@@ -173,8 +177,10 @@ class NhapXuatHanghoaController extends Controller
         $bill->ma; 
         $user = User::all();
         $bill->id_nhanvien = Auth::user()->id;
-        $bill->id_cuahang= $request->id_cuahang;     
+        $bill->ThanhTien=0; 
+        // $bill->id_cuahang= $request->id_cuahang;     
         $bill->save();
+        $totally = 0; 
         // foreach ($cart as $key => $value) {
         //     $hanghoa = hanghoa::find($key);
         //     $hanghoa->Xuat += $value['quantity'];
@@ -187,12 +193,18 @@ class NhapXuatHanghoaController extends Controller
             $bill_detail->id_phieuxuat = $bill->id;
             $bill_detail->id_hanghoa = $key;
             $bill_detail->SoLuong = $value['quantity'];
+            $bill_detail->Dongia = $value['price'];
+            $bill_detail->TongTien = ($value['price']*$value['quantity']);
+            $totally += $bill_detail->TongTien;
             $bill_detail->save();
         }
+        $total = phieuxuat::find($bill->id);
+        $total->ThanhTien = $totally;
+        $total->save();
     session()->forget('cart');
     echo"<script>
         alert('Xuất hàng thành công!');
-        window.location = ' ".url('trangchu')."'
+        window.location = ' ".url('phieuxuat')."'
         </script>";
     }
 
@@ -213,7 +225,8 @@ class NhapXuatHanghoaController extends Controller
                     "name" => $product->Ten,
                     "quantity" => 1,
                     "DVTinh"=> $product->DVTinh,
-                    "id_hanghoa"=> $product->id_hanghoa
+                    "id_hanghoa"=> $product->id_hanghoa,
+                    "price"=> $product->gia,
                     ]
                 ];
         session()->put('cart', $cart);
@@ -232,6 +245,7 @@ class NhapXuatHanghoaController extends Controller
         $cart[$id] = [
             "name" => $product->Ten,
             "quantity" => 1,
+            "price"=> $product->gia,
             "DVTinh"=> $product->DVTinh,
             "id_hanghoa"=> $product->id_hanghoa
         ];

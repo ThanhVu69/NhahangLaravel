@@ -47,13 +47,15 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box">
+                    <div class="col-xs-6">
+                        <div class="box box-success">
                             <div class="box-header">
-                                <i class="fa  fa-calendar-minus-o"></i>
-                                <a href="doanhthu">Trở về doanh thu >></a><br><br>
-                                <h3 class="box-title">Tổng doanh thu (nghìn VNĐ): {{number_format($total)}}</h3>
-
+                                <a href="{{url('doanhthu')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> Trở
+                                    về doanh thu</a><br><br>
+                                <h3 class="box-title">Tổng doanh thu từ {{date('d/m/Y',strtotime($ngay1))}} đến
+                                    {{date('d/m/Y',strtotime($ngay2))}}:
+                                    <strong>{{number_format($total)}}.000VNĐ</strong>
+                                </h3>
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
@@ -62,7 +64,7 @@
                                         <tr role="row">
                                             <th>Tên món ăn</th>
                                             <th>Số lượng</th>
-                                            <th>Tổng tiền (nghìn VNĐ)</th>
+                                            <th>Tổng tiền</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,55 +72,27 @@
                                         <tr>
                                             <td>{{$dthh->monan->Ten}}</td>
                                             <td>{{$dthh->SL}}</td>
-                                            <td>{{number_format($dthh->TT)}}</td>
+                                            <td>{{number_format($dthh->TT)}}.000VNĐ</td>
                                         </tr>
                                         @endforeach
+                                    </tbody>
+                                    </tfoot>
+                                </table>
                             </div>
-
-                            </tbody>
-
-                            </tfoot>
-
-                            </table>
-                            <br><br>
-
-
                         </div>
-                        <!-- /.box-body -->
                     </div>
-
-                    <!-- /.box -->
+                    <div class="col-md-6">
+                        <div class="box box-info">
+                            <div class="box-header">
+                                <figure class="highcharts-figure">
+                                    <div id="container"></div>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.col -->
+            </section>
         </div>
-    </div>
-    </div>
-    </div>
-    <!-- /.row -->
-    </section>
-    <div class="box-body">
-        <div class="row">
-            <div class="col-md-12">
-                <figure class="highcharts-figure">
-                    <div id="container"></div>
-                </figure>
-                <!-- /.chart-responsive -->
-            </div>
-            <!-- /.col -->
-
-        </div>
-    </div>
-
-    <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Cơ sở</b> Nguyễn Văn Lộc
-        </div>
-        <strong>Công ty CP Toàn Phong <a href="http://www.banhcuongiaan.com.vn/">Bánh cuốn Gia An</a>.</strong>
-    </footer>
-
     </div>
     <!-- ./wrapper -->
 
@@ -141,7 +115,6 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <!-- page script -->
     <script>
     $(function() {
         $('#example1').DataTable()
@@ -156,94 +129,7 @@
         })
     })
     </script>
-    <script>
-    Highcharts.chart('container', {
-        chart: {
-            zoomType: 'xy'
-        },
-        title: {
-            text: 'Các món ăn bán trong ngày'
-        },
-
-        xAxis: [{
-            categories: [@foreach($dthanghoa as $hh)
-                '{{$hh->monan->Ten}}',
-                @endforeach
-            ],
-            crosshair: true
-        }],
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value} (nghìn VNĐ)',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            },
-            title: {
-                text: 'Tổng Tiền',
-                style: {
-                    color: Highcharts.getOptions().colors[1]
-                }
-            }
-        }, { // Secondary yAxis
-            title: {
-                text: 'Số lượng',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value} suất',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: true
-        }],
-        tooltip: {
-            shared: true
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'left',
-            x: 120,
-            verticalAlign: 'top',
-            y: 100,
-            floating: true,
-            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || // theme
-                'rgba(255,255,255,0.25)'
-        },
-        series: [{
-            name: 'Số lượng',
-            type: 'column',
-            yAxis: 1,
-            data: [@foreach($dthanghoa as $hh) {
-                    {
-                        $hh - > SL
-                    }
-                },
-                @endforeach
-            ],
-            tooltip: {
-                valueSuffix: ' suất'
-            }
-
-        }, {
-            name: 'Tổng tiền',
-            type: 'spline',
-            data: [@foreach($dthanghoa as $hh) {
-                    {
-                        $hh - > TT
-                    }
-                },
-                @endforeach
-            ],
-            tooltip: {
-                valueSuffix: ' (nghìn VNĐ)'
-            }
-        }]
-    });
-    </script>
+    @include('doanhthu.chart1')
 </body>
 
 </html>

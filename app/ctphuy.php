@@ -8,7 +8,7 @@ class ctphuy extends Model
 {
     protected $table = "ctphuy";
     
-    public function phieuton()
+    public function phieuhuy()
     {
         return $this->belongsTo('App\phieuhuy','id_phieuhuy','id');
     }

@@ -24,4 +24,12 @@ class hanghoa extends Model
     {
         return $this->hasMany('App\ctpton','id_hanghoa','id');
     }
+    public function nhacungcap()
+    {
+        return $this->belongsTo('App\nhacungcap','id_nhacc','id');
+    }
+    public function ctptra()
+    {
+        return $this->belongsTo('App\ctptra','id_hanghoa','id');
+    }
 }

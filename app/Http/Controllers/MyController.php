@@ -23,12 +23,11 @@ use App\phieunhap;
 use App\phieuxuat;
 use App\ctpnhap;
 use App\ctpxuat;
-use App\Cartt;
 use Carbon\Carbon;
-use Cart;
 use Validator;
 use Excel;
 use input;
+use Illuminate\Support\Str;
 use Yajra\Datatables\Datatables;
 class MyController extends Controller
 {
@@ -74,16 +73,200 @@ class MyController extends Controller
 
 // TRANG CHỦ 
     public function trangchu()
-    {   
-        $dtngay =DB::table('cthdban')
-      ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(TongTien) as DT'))
-      ->groupBy('date')
-      ->get();
-        $hoadonban = DB::table('hdban')->orderBy('ThanhTien','DESC')->skip(0)->take(3)->get();
-        $total = DB::table('cthdban')->sum('TongTien');
-        return view('admin.trangchu', compact('dtngay','hoadonban','total'));
-    }
+    {  
+    $day = Carbon::today()->toDateString();
+    $subday = Carbon::today()->subDay()->day;
+    $month = Carbon::today()->month;
+    $submonth = Carbon::today()->subMonth()->month;
+
+    //Doanh thu hôm nay
+    $dthomnay = DB::table('hdban')
+    ->select(DB::raw('DATE(Ngay) as date'), DB::raw('SUM(ThanhTien) as DTHN'))
+    ->groupBy('date')
+    ->havingRaw('date = ?',[$day])
+    ->get();
+
+    //Doanh thu hôm qua
+    $dthomqua = DB::table('hdban')
+    ->select(DB::raw('DAY(Ngay) as lastday'), DB::raw('SUM(ThanhTien) as DTHQ'))
+    ->groupBy('lastday')
+    ->havingRaw('lastday = ?',[$subday])
+    ->get();
     
+    //Biểu đồ đường - cột
+    $dtngay = DB::table('hdban')
+    ->select(DB::raw('DATE(Ngay) as date'), DB::raw('SUM(ThanhTien) as DT'), DB::raw('COUNT(id) as HD'))
+    ->groupBy('date')
+    ->havingRaw('MONTH(date) = ?',[$month])
+    ->get();
+    
+    //Biểu đồ Donut
+    $donutchart = DB::table('hdban')->where('trangthai','=',1)
+    ->select('phuongthucthanhtoan', DB::raw('SUM(ThanhTien) as DT'))
+    ->groupBy('phuongthucthanhtoan')->orderBy('DT','DESC')
+    ->get();
+
+    //Doanh thu tháng hiện tại
+    $dtthang = DB::table('hdban')
+    ->select(DB::raw('MONTH(Ngay) as month'), DB::raw('SUM(ThanhTien) as DTT'))
+    ->groupBy('month')
+    ->havingRaw('month = ?',[$month])
+    ->get();
+    
+    //Doanh thu tháng trước
+    $dtthangtruoc = DB::table('hdban')
+    ->select(DB::raw('MONTH(Ngay) as lastmonth'),DB::raw('SUM(ThanhTien) as DTTT'))
+    ->groupBy('lastmonth')
+    ->havingRaw('lastmonth = ?',[$submonth])
+    ->get();
+
+    //Tỉ lệ doanh thu
+    $r0 = 0;
+    if($dthomnay == Null){
+        $r0 = 0;
+    }
+    else{
+        foreach($dthomnay as $dthomnay){
+            $r0 = $dthomnay -> DTHN;
+        }
+    }
+    foreach($dthomqua as $dthomqua){
+        $r3 = $dthomqua -> DTHQ;
+    }
+    $r1 = 0;
+    if($dtthang == Null){
+        $r1 = 0;
+    }
+    else{
+        foreach($dtthang as $dtthang){
+            $r1 = $dtthang -> DTT; 
+        }
+    }
+    foreach($dtthangtruoc as $dtthangtruoc){
+        $r2 = $dtthangtruoc -> DTTT;
+        $dttt =  $dtthangtruoc -> lastmonth;
+    }
+    $r = number_format(($r1-$r2)/$r2*100, 1);
+    $r4= number_format(($r0-$r3)/$r3*100, 1);
+
+    //Món ăn mới thêm
+    $monan = DB::table('monan')->orderBy('updated_at','DESC')->skip(0)->take(4)->get();
+    //Hóa đơn giá trị cao
+    $hoadonban = DB::table('hdban')->orderBy('ThanhTien','DESC')->skip(0)->take(7)->get();
+    //Hóa đơn đã thanh toán
+    $hdban = DB::table('hdban')->where('trangthai',1)->count('id');
+    //Hóa đơn chưa thanh toán
+    $hddaban = DB::table('hdban')->where('trangthai','=',Null)->count('id');
+    //Số lượng món ăn
+    $soluongmonan = DB::table('monan')->count('id');
+    //Số lượng nhà cung cấp
+    $soluongncc = DB::table('nhacungcap')->count('id');
+    //Tổng doanh thu
+    $total = DB::table('cthdban')->sum('TongTien');
+    return view('admin.trangchu', compact('dtngay','hoadonban','total','hdban','hddaban','monan','dtthang','month',
+    'subday','submonth','day','dtthangtruoc','soluongmonan','soluongncc','r','r0','r1','r2','r3','r4','dthq','dthn',
+    'dtt','dttt','donutchart'));
+    }
+
+// User
+// Danh sách User
+    public function nguoidung()
+    {
+        $iduser = intval(Auth::User()->quyen);
+        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+        $user= User::all();
+        return view('admin.nguoidung',compact('iduser','xem_ac','user'));
+    }
+// Thêm User
+    public function postthemnguoidung(Request $request)
+    {
+    $user = new User;
+    $user->id= $request->id;
+    $user->name= $request->name;
+    $user->SDT= $request->SDT;
+    $user->email= $request->email;
+    $user->password= bcrypt($request->password);
+    $user->DiaChi= $request->DiaChi;
+    $user->ChucVu= $request->ChucVu;
+    if($request->ChucVu == "Quản lý")
+    {
+        $user->quyen = 1;
+    }
+    else{
+        $user->quyen = 0;
+    }
+    //Thêm ảnh
+    if($request->hasFile('image'))
+    {
+        $file = $request->file('image');
+
+        $name = $file->getClientOriginalName();
+        $image = Str::random(4)."_".$name;
+        while(file_exists("upload/nguoidung/".$image))
+        {
+            $image = Str::random(4)."_".$name;
+        }
+        $file->move("upload/nguoidung",$image);
+        $user->image = $image;
+    }
+    else{
+        $user->image = "";
+    }
+    $user->save();
+    echo"<script>
+        alert('Thêm thành công!');
+        window.location = ' ".url('nguoidung')."'
+        </script>";
+    }
+// Sửa User
+    public function postsuanguoidung(Request $request)
+    {
+    $user= User::find($request->id);
+    $user->name= $request->name;
+    $user->SDT= $request->SDT;
+    $user->email= $request->email;
+    $user->DiaChi= $request->DiaChi;
+    $user->ChucVu= $request->ChucVu;
+    if($request->ChucVu == "Quản lý")
+    {
+        $user->quyen = 1;
+    }
+    else{
+        $user->quyen = 0;
+    }
+//Sửa ảnh
+    if($request->hasFile('image'))
+    {
+        $file = $request->file('image');
+
+        $name = $file->getClientOriginalName();
+        $image = Str::random(4)."_".$name;
+        while(file_exists("upload/nguoidung/".$image))
+        {
+            $image = Str::random(4)."_".$name;
+        }
+        $file->move("upload/nguoidung",$image);
+        $user->image = $image;
+    }
+    $user->save();
+    echo"<script>
+        alert('Sửa thành công!');
+        window.location = ' ".url('nguoidung')."'
+        </script>";
+    }
+// Xóa User
+    public function getxoanguoidung($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+
+        echo"<script>
+        alert('Xóa thành công!');
+        window.location = ' ".url('nguoidung')."'
+        </script>";
+    }
+
+
 //Xử lí thanh toán
     public function xuli($id)
         {   
@@ -154,7 +337,41 @@ class MyController extends Controller
         // dd($xuat);
             return view('baocao.tonghop',compact('nhap','xuat','huy','ton'));
         }
+//Báo cáo cuối ngày
+    public function baocaocuoingay()
+    {
+    // $month = Carbon::now()->month;
+    // ->whereMonth('ctpnhap.created_at', $month)
+    // $day = Carbon::today()->toDateString();
+    // $subday = Carbon::today()->subDay()->day;
+    // $month = Carbon::today()->month;
+    // $submonth = Carbon::today()->subMonth()->month;
 
+    // $nhap =DB::table('ctpnhap')->whereDate('ctpnhap.created_at',$day)-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
+    // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+    // ->groupBy('Ten')
+    // ->get();
+    $nhap =DB::table('hanghoa')-> leftjoin('ctpnhap','hanghoa.id','=','ctpnhap.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(ctpnhap.SoLuong) as SL'))
+        ->groupBy('Ten')
+        ->get();
+
+    $xuat =DB::table('hanghoa')-> leftjoin('ctpxuat','hanghoa.id','=','ctpxuat.id_hanghoa')
+    ->select('Ten', DB::raw('SUM(ctpxuat.SoLuong) as SL'))
+    ->groupBy('Ten')
+    ->get();
+
+
+    $huy =DB::table('ctphuy')-> join('hanghoa','hanghoa.id','=','ctphuy.id_hanghoa')
+    ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+    ->groupBy('Ten')->get();
+    $ton =DB::table('ctpton')-> join('hanghoa','hanghoa.id','=','ctpton.id_hanghoa')
+    ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+    ->groupBy('Ten')->get();
+
+    
+        return view('baocao.baocaocuoingay',compact('nhap','xuat','huy','ton'));
+    }
 
 //Hàng bán
     public function hangban()
@@ -273,32 +490,8 @@ class MyController extends Controller
     }
 
 //Test
-    public function test()
-    {
-        // $nhap = DB::table('ctpnhap')-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
-        // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        // ->groupBy('Ten')->get();
-
-        // $xuat = DB::table('ctpxuat')-> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')
-        // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        // ->groupBy('Ten')->get();
-
-        
-       
-
-        $nhap = DB::table('ctpnhap')->select('id_hanghoa',DB::raw('SUM(SoLuong) as SLnhap'))->groupBy('id_hanghoa');
-        $xuat = DB::table('ctpxuat')->select('id_hanghoa',DB::raw('SUM(SoLuong) as SLxuat'))->groupBy('id_hanghoa');
-
-        $hanghoa = DB::table('hanghoa')
-        ->leftjoin('ctpnhap','hanghoa.id','=','ctpnhap.id_hanghoa')
-        ->leftjoin('ctpxuat','hanghoa.id','=','ctpxuat.id_hanghoa')
-        ->select('Ten',DB::raw('SUM(ctpnhap.SoLuong) as SLnhap'),DB::raw('SUM(ctpxuat.SoLuong) as SLxuat'))
-        ->groupBy('Ten')
-        ->get();
-
-        dd($hanghoa);
-        return view('test',compact('hanghoa'));
-    }
+    
+    
 }
 
 

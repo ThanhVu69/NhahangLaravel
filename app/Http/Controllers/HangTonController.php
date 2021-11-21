@@ -20,7 +20,7 @@ use App\User;
 
 class HangTonController extends Controller
 {
-    //Báo cáo hàng tồn 
+//Báo cáo hàng tồn 
     public function baocaohangton()
     {
     $products= hanghoa::all();
@@ -40,7 +40,9 @@ class HangTonController extends Controller
         $bill->ma; 
         $user = User::all();
         $bill->id_nhanvien = Auth::user()->id;
+        $bill->ThanhTien=0;     
         $bill->save();
+        $totally = 0; 
         // foreach ($cart as $key => $value) {
         //     $hanghoa = hanghoa::find($key);
         //     $hanghoa->Ngay = date('Y-m-d');
@@ -55,8 +57,14 @@ class HangTonController extends Controller
             $bill_detail->id_phieuton = $bill->id;
             $bill_detail->id_hanghoa = $key;
             $bill_detail->SoLuong = $value['quantity'];
+            $bill_detail->Dongia = $value['price'];
+            $bill_detail->TongTien = ($value['price']*$value['quantity']);
+            $totally += $bill_detail->TongTien;
             $bill_detail->save();
         }
+        $total = phieuton::find($bill->id);
+        $total->ThanhTien = $totally;
+        $total->save();
     session()->forget('cart');
     echo"<script>
         alert('Báo cáo hàng tồn thành công!');
@@ -80,7 +88,8 @@ class HangTonController extends Controller
                 "name" => $product->Ten,
                 "quantity" => 1,
                 "DVTinh"=> $product->DVTinh,
-                "id_hanghoa"=> $product->id_hanghoa
+                "id_hanghoa"=> $product->id_hanghoa,
+                "price"=> $product->gia,
                 ]
             ];
     session()->put('cart', $cart);
@@ -99,6 +108,7 @@ class HangTonController extends Controller
     $cart[$id] = [
         "name" => $product->Ten,
         "quantity" => 1,
+        "price"=> $product->gia,
         "DVTinh"=> $product->DVTinh,
         "id_hanghoa"=> $product->id_hanghoa
     ];
@@ -135,83 +145,5 @@ class HangTonController extends Controller
             session()->flash('success', 'Product removed successfully');
             
         }
-    }
-
-
-
-
-
-
-
-
-
-//Báo cáo hàng tồn đầu ca
-    public function baocaohangtondc()
-    {
-    $products= hanghoa::all();
-    return view('baocao.baocaohangtondc',compact('products'));
-    }
-//Get giỏ báo cáo hàng tồn đầu ca
-    public function getgiobchangtondc()
-    {
-    return view('baocao.giobchangtondc');
-    }
-//Post giỏ báo cáo hàng tồn đầu ca
-    public function postgiobchangtondc()
-    {   
-    $cart = session()->get('cart');
-    foreach ($cart as $key => $value) {
-        $hanghoa = hanghoa::find($key);
-        $hanghoa->SoLuong += $value['quantity'];
-        $hanghoa->TonDC += $value['quantity'];
-        $hanghoa->save();
-    } 
-    session()->forget('cart');
-    echo"<script>
-        alert('Báo cáo hàng tồn đầu ca thành công!');
-        window.location = ' ".url('trangchu')."'
-        </script>";
-    }
-//Thêm báo cáo hàng tồn đầu ca
-    public function thembaocaohangtondc($id)
-    {
-    $product = hanghoa::find($id);
-
-    if(!$product)
-    {
-        abort(404);
-    }
-    $cart = session()->get('cart');
-    // if cart is empty then this the first product
-    if(!$cart) {
-    $cart = [
-        $id => [
-                "name" => $product->Ten,
-                "quantity" => 1,
-                "DVTinh"=> $product->DVTinh,
-                "id_hanghoa"=> $product->id_hanghoa
-                ]
-            ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
-    } 
-    // if cart not empty then check if this product exist then increment quantity
-    if(isset($cart[$id])) {
-
-        $cart[$id]['quantity']++;
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('thongbao', 'Thành công!');
-    }
-    // if item not exist in cart then add to cart with quantity = 1
-    $cart[$id] = [
-        "name" => $product->Ten,
-        "quantity" => 1,
-        "DVTinh"=> $product->DVTinh,
-        "id_hanghoa"=> $product->id_hanghoa
-    ];
-    session()->put('cart', $cart);
-    return redirect()->back()->with('thongbao', 'Thành công!');
     }
 }

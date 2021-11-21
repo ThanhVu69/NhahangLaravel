@@ -48,24 +48,15 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h4>Báo cáo hàng tồn</h4>
-
-                <i class="fa  fa-file-text-o"></i>
-                @if(session('cart'))
-                <a href="giobchangton">Xem danh sách</a></li><br>
-                @else
-                Xem danh sách
-                @endif
             </section>
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-6">
                         <div class="box">
                             <div class="box-header">
-                                <h3 class="box-title">Danh sách hàng hóa</h3>
+                                <h3 class="box-title">Báo cáo hàng tồn</h3>
                             </div>
-                            <!-- /.box-header -->
                             <div class="box-body">
                                 @if(session('thongbao'))
                                 <div class="alert alert-success">
@@ -75,31 +66,82 @@
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th style="  text-align: center">Mã HH</th>
-                                            <th style="  text-align: center">Tên</th>
-                                            <th style="  text-align: center">Đơn vị tính</th>
+                                            <th>Mã HH</th>
+                                            <th>Tên</th>
+                                            <th>Giá</th>
+                                            <th>Đơn vị tính</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($products as $product)
                                         <tr>
-                                            <td style="  text-align: center">{{$product->ma}}</td>
-                                            <td style="  text-align: center"><a
-                                                    href="{{ url('thembaocaohangton/'.$product->id) }}"
-                                                    class="btn btn-warning btn-block text-center">{{$product->Ten}}</a>
-                                            </td>
-                                            <td style="  text-align: center">{{$product->DVTinh}}</td>
+                                            <td>{{$product->ma}}</td>
+                                            <td>{{$product->Ten}}</td>
+                                            <td>{{$product->gia}}</td>
+                                            <td>{{$product->DVTinh}}</td>
+                                            <td><a href="{{ url('thembaocaohangton/'.$product->id) }}"
+                                                    class="btn btn-primary">Thêm</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                     </tfoot>
                                 </table>
-
-
                             </div>
-                            <!-- /.box-body -->
                         </div>
-                        <!-- /.box -->
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="box">
+                            <div class="box-body">
+                                <table id="example2" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="  text-align: center">Tên</th>
+                                            <th style=" width:100px; text-align: center">Số lượng</th>
+                                            <th style=" text-align: center"></th>
+                                            <th style=" text-align: center">Đơn giá (nghìn VNĐ)</th>
+                                            <th style=" text-align: center">Thành tiền (nghìn VNĐ)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $total = 0 ?>
+                                    @if(session('cart'))
+                                    @foreach(session('cart') as $id => $details)
+                                    <?php $total += $details['price'] * $details['quantity'] ?>
+                                        <tr style=" text-align: center">
+                                            <td style=" text-align: center">{{ $details['name'] }}</td>
+
+                                            <td class="cart_quantity" style=" width:100px; text-align: center">
+                                                <input type="number" value="{{ $details['quantity'] }}"
+                                                    class="form-control quantity" />
+                                            </td>
+
+                                            <td class="actions" style=" text-align: center" data-th="">
+                                                <button class="btn btn-info btn-sm update-cart" data-id="{{ $id }}"><i
+                                                        class="fa fa-refresh"></i></button>
+                                                <button class="btn btn-danger btn-sm remove-from-cart"
+                                                    data-id="{{ $id }}"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                            <td>{{ $details['price'] }}</td>
+                                            <td>{{ $details['price'] * $details['quantity'] }}</td>
+                                            @endforeach
+                                    </tbody>
+                                    </tfoot>
+                                </table>
+                                <div class="span4 pull-right">
+                                    <table id="example2" class="table table-bordered table-hover">
+                                        <form action="giobchangton" method="post">
+                                            <input type="hidden" name="_token" value="{{csrf_token()}}" />
+                                            </tfoot>
+                                            <th>Tổng tiền (nghìn VNĐ)</th>
+                                            <th>{{ $total }}</th>
+                                    </table>
+                                    <input type="submit" name="submit" value="Thực hiện" class="btn btn-primary" />
+                                </div>
+                                </form>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -141,6 +183,35 @@
         })
     })
     </script>
+    <script type="text/javascript">
+ 
+ $(".update-cart").click(function (e) {
+    e.preventDefault();
+    var ele = $(this);
+     $.ajax({
+        url: '{{ url('update-cart') }}',
+        method: "patch",
+        data: {_token: '{{ csrf_token() }}', id: ele.attr("data-id"), quantity: ele.parents("tr").find(".quantity").val()},
+        success: function (response) {
+            window.location.reload();
+        }
+     });
+ });
+ $(".remove-from-cart").click(function (e) {
+     e.preventDefault();
+     var ele = $(this);
+     if(confirm("Are you sure")) {
+         $.ajax({
+             url: '{{ url('remove-from-cart') }}',
+             method: "DELETE",
+             data: {_token: '{{ csrf_token() }}', id: ele.attr("data-id")},
+             success: function (response) {
+                 window.location.reload();
+             }
+         });
+     }
+ });
+</script>
 </body>
 
 </html>

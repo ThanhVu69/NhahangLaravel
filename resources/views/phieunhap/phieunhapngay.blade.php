@@ -50,8 +50,7 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <i class="fa  fa-calendar-minus-o"></i>
-                                <a href="phieunhap">Trở về phiếu nhập >></a><br><br>
+                                <a href="{{url('phieunhap')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> Trở về phiếu nhập</a><br><br>
                                 <h3 class="box-title">Phiếu nhập ngày </h3>
                                 <p>Tìm thấy {{count($product)}} phiếu nhập</p>
                             </div>
@@ -61,8 +60,8 @@
                                     <thead>
                                         <tr>
                                             <th>Mã PN</th>
-                                            <th>Cửa hàng</th>
                                             <th>Ngày</th>
+                                            <th>Tổng tiền</th>
                                             <th>Người nhập</th>
                                             <th>Chi tiết</th>
                                         </tr>
@@ -71,10 +70,10 @@
                                         @foreach($product as $item)
                                         <tr>
                                             <td>{{$item->ma}}{{$item->id}}</td>
-                                            <td>{{$item->cuahang->TenCH}}</a></td>
-                                            <td>{{$item->Ngay}}</td>
+                                            <td>{{date('d/m/Y',strtotime($item->Ngay))}}</td>
+                                            <td>{{$item->ThanhTien}}.000VNĐ</td>
                                             <td>{{$item->User->name}}</td>
-                                            <td><i class="fa fa-pencil fa-fw"></i><a href="#" data-toggle="modal"
+                                            <td></i><a href="#" data-toggle="modal" class="btn btn-primary btn-sm"
                                                     data-target="#{{$item->id}}">Chi tiết</a>
                                             </td>
                                         </tr>
@@ -113,6 +112,8 @@
                             <tr role="row">
                                 <th>Tên</th>
                                 <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
                                 <th>Đơn vị tính</th>
                             </tr>
                         </thead>
@@ -120,9 +121,11 @@
                             @foreach($ctpnhap as $gv)
                             @if($gv->id_phieunhap == $hh->id)
                             <tr>
-                                <td>{{$gv->Ten}}</td>
+                                <td>{{$gv->hanghoa->Ten}}</td>
                                 <td>{{$gv->SoLuong}}</td>
-                                <td>{{$gv->DVTinh}}</td>
+                                <td>{{$gv->Dongia}}</td>
+                                <td>{{$gv->TongTien}}</td>
+                                <td>{{$gv->hanghoa->DVTinh}}</td>
                             </tr>
                             @endif
                             @endforeach

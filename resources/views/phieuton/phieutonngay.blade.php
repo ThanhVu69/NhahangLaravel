@@ -36,7 +36,6 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-
         @include('trangquanly.header')
         @include('trangquanly.thanhmenu')
 
@@ -44,10 +43,6 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-
-                </h1><br>
-               
             </section>
             <!-- Main content -->
             <section class="content">
@@ -55,47 +50,38 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <i class="fa  fa-calendar-minus-o"></i>
-                                <a href="phieuxuat">Trở về phiếu tồn >></a><br><br>
+                                <a href="{{url('phieuton')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> Trở về phiếu tồn</a><br><br>
                                 <h3 class="box-title">Phiếu tồn ngày </h3>
                                 <p>Tìm thấy {{count($product)}} phiếu tồn</p>
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Mã PT</th>
+                                            <th>Mã PN</th>
                                             <th>Ngày</th>
+                                            <th>Tổng tiền</th>
                                             <th>Người kiểm</th>
                                             <th>Chi tiết</th>
-
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         @foreach($product as $item)
-
                                         <tr>
                                             <td>{{$item->ma}}{{$item->id}}</td>
-                                            <td>{{$item->Ngay}}</td>
+                                            <td>{{date('d/m/Y',strtotime($item->Ngay))}}</td>
+                                            <td>{{$item->ThanhTien}}.000VNĐ</td>
                                             <td>{{$item->User->name}}</td>
-                                            <td><i class="fa fa-pencil fa-fw"></i><a href="#" data-toggle="modal"
+                                            <td></i><a href="#" data-toggle="modal" class="btn btn-primary btn-sm"
                                                     data-target="#{{$item->id}}">Chi tiết</a>
                                             </td>
                                         </tr>
                                         @endforeach
-
                                     </tbody>
-
                                     </tfoot>
-
                                 </table>
-
                             </div>
-
-
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -110,49 +96,8 @@
     <!-- /.content-wrapper -->
     <footer class="main-footer">
     </footer>
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Create the tabs -->
-        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-
-            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <!-- Home tab content -->
-            <div class="tab-pane" id="control-sidebar-home-tab">
-
-
-
-                </a>
-                </li>
-
-                </ul>
-                <!-- /.control-sidebar-menu -->
-
-            </div>
-            <!-- /.tab-pane -->
-
-            <!-- Settings tab content -->
-
-
-        </div>
-        <!-- /.form-group -->
-        </form>
-        </div>
-        <!-- /.tab-pane -->
-        </div>
-    </aside>
-    <!-- /.control-sidebar -->
-    <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-    <div class="control-sidebar-bg"></div>
-
     </div>
     <!-- ./wrapper -->
-
-
 
     @foreach($product as $hh)
     <div class="modal fade" id="{{$hh->id}}">
@@ -167,6 +112,8 @@
                             <tr role="row">
                                 <th>Tên</th>
                                 <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
                                 <th>Đơn vị tính</th>
                             </tr>
                         </thead>
@@ -174,9 +121,11 @@
                             @foreach($ctpton as $gv)
                             @if($gv->id_phieuton == $hh->id)
                             <tr>
-                                <td>{{$gv->Ten}}</td>
+                                <td>{{$gv->hanghoa->Ten}}</td>
                                 <td>{{$gv->SoLuong}}</td>
-                                <td>{{$gv->DVTinh}}</td>
+                                <td>{{$gv->Dongia}}</td>
+                                <td>{{$gv->TongTien}}</td>
+                                <td>{{$gv->hanghoa->DVTinh}}</td>
                             </tr>
                             @endif
                             @endforeach
@@ -191,6 +140,8 @@
         </div>
     </div>
     @endforeach
+
+
     <!-- jQuery 3 -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->

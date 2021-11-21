@@ -21,37 +21,18 @@ class MonanController extends Controller
     public function monan()
     {
         $iduser = intval(Auth::User()->quyen);
+        $loaimonan = loaimonan::all();
         $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
         $monan= monan::all();
-        return view('monan.monan',compact('iduser','xem_ac','monan'));
+        return view('monan.monan',compact('iduser','xem_ac','monan','loaimonan'));
     }  
 // Thêm món ăn
-    public function getthemmonan()
-    {
-        $loaimonan = loaimonan::all();
-        return view('monan.themmonan',compact('loaimonan'));
-    }
     public function postthemmonan(Request $request)
     {
-        $this->validate($request,[
-            'ma'=>'required',
-            'Ten'=>'required',
-            'dongia'=>'required',
-            'DVTinh'=>'required'  
-            ],[
-            'ma.required'=>'Vui lòng nhập Mã món ăn',
-            'Ten.required'=>'Vui lòng nhập Tên món ăn',
-            'dongia.required'=>'Vui lòng nhập Đơn giá',
-            'DVTinh.required'=>'Vui lòng nhập Đơn vị tính'
-            ]);
-            
     $monan = new monan;
-    $monan->ma= $request->ma;
     $monan->Ten= $request->Ten;
     $monan->DVTinh= $request->DVTinh;
     $monan->dongia= $request->dongia;
-    $monan->khuyenmai= $request->khuyenmai;
-    $monan->mota= $request->mota;
     $monan->id_loaimonan= $request->id_loaimonan;
     if($request->hasFile('anh'))
     {
@@ -76,21 +57,13 @@ class MonanController extends Controller
     </script>";
     }
 // Sửa món ăn
-    public function getsuamonan($id)
+    public function postsuamonan(Request $request)
     {
-        $monan= monan::find($id);
-        $loaimonan = loaimonan::all();
-        return view('monan.suamonan',compact('monan','loaimonan'));
-    }
-    public function postsuamonan(Request $request,$id)
-    {
-    $monan = monan::find($id);
-    $monan -> ma = $request->ma;
+    $monan= monan::find($request->id);
     $monan -> Ten = $request->Ten;
     $monan -> DvTinh = $request->DVTinh;
     $monan -> dongia = $request->dongia;
-    $monan -> khuyenmai = $request->khuyenmai;
-    $monan -> mota = $request->mota;
+    $monan -> id_loaimonan = $request->id_loaimonan;
     if($request->hasFile('anh'))
             {
                 $file = $request->file('anh');
@@ -125,64 +98,45 @@ class MonanController extends Controller
 
 //LOẠI MÓN ĂN
 // Loại món ăn
-public function loaimonan()
-{
-    $iduser = intval(Auth::User()->quyen);
-    $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
-    $loaimonan= loaimonan::all();
-    $monan= DB::table('monan')-> join('loaimonan','loaimonan.id','=','monan.id_loaimonan') ->get();
-    return view('monan.loaimonan',compact('iduser','xem_ac','loaimonan','monan'));
-}  
+    public function loaimonan()
+    {
+        $iduser = intval(Auth::User()->quyen);
+        $xem_ac= DB::table('users')->where('quyen',$iduser)->get();
+        $loaimonan= loaimonan::all();
+        $monan= DB::table('monan')-> join('loaimonan','loaimonan.id','=','monan.id_loaimonan') ->get();
+        return view('monan.loaimonan',compact('iduser','xem_ac','loaimonan','monan'));
+    }  
 // Thêm loại món ăn
-public function getthemloaimonan()
-{
-    return view('monan.themloaimonan');
-}
-public function postthemloaimonan(Request $request)
-{
-        $this->validate($request,[
-            'ma'=>'required',
-            'ten'=>'required',
-            ],[
-            'ma.required'=>'Vui lòng nhập Mã loại món ăn',
-            'ten.required'=>'Vui lòng nhập Tên loại món ăn'
-            ]);
-            
-    $loaimonan = new loaimonan;
-    $loaimonan->ma= $request->ma;
-    $loaimonan->ten= $request->ten;
-    $loaimonan->save();
-    echo"<script>
-    alert('Thêm loại món ăn thành công!');
-    window.location = ' ".url('loaimonan')."'
-    </script>";
-}
-// Sửa loại món ăn
-public function getsualoaimonan($id)
+    public function postthemloaimonan(Request $request)
     {
-        $loaimonan= loaimonan::find($id);
-        return view('monan.sualoaimonan',compact('loaimonan'));
-    }
-public function postsualoaimonan(Request $request,$id)
-{
-    $loaimonan = loaimonan::find($id);
-    $loaimonan -> ma = $request->ma;
-    $loaimonan -> ten = $request->ten;
-    $loaimonan->save();
-    echo"<script>
-    alert('Sửa loại món ăn thành công!');
-    window.location = ' ".url('loaimonan')."'
-    </script>";
-}
-//Xóa loại món ăn
-public function getxoaloaimonan($id)
-    {
-        $loaimonan = loaimonan::find($id);
-        $loaimonan->delete();
-
+        $loaimonan = new loaimonan;
+        $loaimonan->ten= $request->ten;
+        $loaimonan->save();
         echo"<script>
-        alert('Xóa loại món ăn thành công!');
-        window.location = ' ".url('loaimonan')."'
+        alert('Thêm loại món ăn thành công!');
+        window.location = ' ".url('monan')."'
         </script>";
     }
+// Sửa loại món ăn
+    public function postsualoaimonan(Request $request)
+    {
+        $loaimonan= loaimonan::find($request->id);
+        $loaimonan -> ten = $request->ten;
+        $loaimonan->save();
+        echo"<script>
+        alert('Sửa loại món ăn thành công!');
+        window.location = ' ".url('monan')."'
+        </script>";
+    }
+//Xóa loại món ăn
+    public function getxoaloaimonan($id)
+        {
+            $loaimonan = loaimonan::find($id);
+            $monan = DB::table('monan')->where('monan.id_loaimonan',$id)->delete();
+            $loaimonan->delete();
+            echo"<script>
+            alert('Xóa loại món ăn thành công!');
+            window.location = ' ".url('monan')."'
+            </script>";
+        }
 }
