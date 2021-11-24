@@ -183,6 +183,7 @@
 
 //BẢNG TỔNG HỢP
     Route::get('tonghop','MyController@tonghop');
+    Route::get('tonghopngay','MyController@tonghopngay');
 
 //BÁO CÁO CUỐI NGÀY
     Route::get('baocaocuoingay','MyController@baocaocuoingay');
@@ -237,8 +238,8 @@
     Route::patch('update-cart', 'NhapXuatHanghoaController@updategiohangthonhap'); 
     Route::delete('remove-from-cart', 'NhapXuatHanghoaController@removegiohangthonhap');
 
+//BÁO CÁO EXCEL HÀNG HÓA
     Route::get('xuatexcel','MyController@excel');
-    Route::get('capnhat','MyController@capnhat');
 
 //Test
     Route::get('test', 'TestController@index');

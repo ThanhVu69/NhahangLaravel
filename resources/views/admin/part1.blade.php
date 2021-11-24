@@ -32,9 +32,9 @@
                     <h5 style="text-align:right;"><i class="fa fa-arrow-up"></i> {{$r4}} %</h5>
                     @elseif ($r4 < 0) <h5 style="text-align:right;"><i class="fa fa-arrow-down"></i>
                         {{$r4}} %</h5>
-                        @elseif ($r4 == 0)
-                        <h5 style="text-align:right;"></h5>
-                        @endif
+                    @elseif ($r4 == 0)
+                    <h5 style="text-align:right;">%</h5>
+                    @endif
                 </div>
                 <div class="icon">
                     <i class="fa fa-cart-plus"></i>

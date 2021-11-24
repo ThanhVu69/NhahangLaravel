@@ -17,12 +17,12 @@
     <link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
-    <!-- Google Font -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    
+    <link rel="stylesheet" href="datatables/paginate.css">
+    <link rel="stylesheet" href="datatables/button_exports.css">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -37,10 +37,10 @@
             <section class="content">
                 <!-- DOANH THU NGÀY -->
                 <div class="row">
-                    <div class="col-xs-7">
+                    <div class="col-xs-5">
                         <div class="box box-danger">
                             <div class="box-header">
-                                <div class="col-xs-8">
+                                <div class="col-xs-12">
                                     <!-- Lọc doanh thu theo ngày -->
                                     <form action="doanhthungay" method="get">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}" />
@@ -62,16 +62,13 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div style="align=center">
-                                    <a href="exceldoanhthungay" class="btn btn-success">Xuất sang EXCEL</a>
-                                </div>
                             </div>
                             <div class="box-body">
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
                                         <tr role="row">
-                                            <th>Ngày</th>
-                                            <th>Doanh thu</th>
+                                            <th style="width:100px">Ngày</th>
+                                            <th style="width:100px">Doanh thu</th>
                                             <th>Số lượng hóa đơn</th>
                                         </tr>
                                     </thead>
@@ -87,10 +84,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-5">
+                    <div class="col-xs-7">
                         <div class="box box-warning">
                             <div class="box-body">
+                                <!-- Biểu đồ cột -->
                                 @include('doanhthu.chart2')
+                            </div>
+                        </div>
+                        <div class="box box-success">
+                            <div class="box-body">
+                                <!-- Biểu đô vùng -->
+                                @include('doanhthu.chart3')
                             </div>
                         </div>
                     </div>
@@ -118,20 +122,57 @@
         <!-- AdminLTE for demo purposes -->
         <script src="../../dist/js/demo.js"></script>
         <!-- page script -->
-        <script>
-        $(function() {
-            $('#example1').DataTable()
-            $('#example2').DataTable()
-            $('#example3').DataTable({
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-            })
-        })
-        </script>
+        <!-- Datatables -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('#example1').DataTable( {
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [ 10, 25, 50, -1 ],
+            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        buttons: [
+            'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
+<script>
+    $(document).ready(function() {
+    $('#example2').DataTable( {
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [ 10, 25, 50, -1 ],
+            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        buttons: [
+            'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
+<script>
+    $(document).ready(function() {
+    $('#example3').DataTable( {
+        dom: 'Bfrtip',
+        lengthMenu: [
+            [ 10, 25, 50, -1 ],
+            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        buttons: [
+            'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
 </body>
 
 </html>

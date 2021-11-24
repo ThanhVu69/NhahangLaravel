@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Query\JoinClause;
 
 use App\monan;
 use App\nhanvien;
@@ -21,8 +22,14 @@ use App\hdban;
 use App\cthdban;
 use App\phieunhap;
 use App\phieuxuat;
+use App\phieuhuy;
+use App\phieuton;
+use App\phieutra;
 use App\ctpnhap;
 use App\ctpxuat;
+use App\ctpthuy;
+use App\ctpton;
+use App\ctptra;
 use Carbon\Carbon;
 use Validator;
 use Excel;
@@ -122,16 +129,23 @@ class MyController extends Controller
 
     //Tỉ lệ doanh thu
     $r0 = 0;
+    $r3 = 0;
     if($dthomnay == Null){
         $r0 = 0;
+        $r3 = 0;
     }
     else{
         foreach($dthomnay as $dthomnay){
             $r0 = $dthomnay -> DTHN;
         }
     }
-    foreach($dthomqua as $dthomqua){
-        $r3 = $dthomqua -> DTHQ;
+    if($dthomqua == Null){
+        $r3 = 0;
+    }
+    else{
+        foreach($dthomqua as $dthomqua){
+            $r3 = $dthomqua -> DTHQ;
+        }
     }
     $r1 = 0;
     if($dtthang == Null){
@@ -147,7 +161,14 @@ class MyController extends Controller
         $dttt =  $dtthangtruoc -> lastmonth;
     }
     $r = number_format(($r1-$r2)/$r2*100, 1);
-    $r4= number_format(($r0-$r3)/$r3*100, 1);
+
+    if($r3 <> 0){
+        $r4= number_format(($r0-$r3)/$r3*100, 1);
+    }
+    else{
+        $r4 = 0;
+    }
+    
 
     //Món ăn mới thêm
     $monan = DB::table('monan')->orderBy('updated_at','DESC')->skip(0)->take(4)->get();
@@ -162,10 +183,16 @@ class MyController extends Controller
     //Số lượng nhà cung cấp
     $soluongncc = DB::table('nhacungcap')->count('id');
     //Tổng doanh thu
-    $total = DB::table('cthdban')->sum('TongTien');
+    $total = DB::table('hdban')->whereMonth('Ngay',$month)->sum('ThanhTien');
+    $chiphixuat = DB::table('phieuxuat')->whereMonth('Ngay',$month)->sum('ThanhTien');
+    $chiphihuy = DB::table('phieuhuy')->whereMonth('Ngay',$month)->sum('ThanhTien');
+    $chiphikhac = DB::table('phieuchi')->whereMonth('created_at',$month)->sum('ThanhTien');
+    $soluongdonhang = DB::table('hdban')->whereMonth('Ngay',$month)->count('id');
+    $chiphi = $chiphixuat + $chiphihuy + $chiphikhac;
+    $loinhuan = $total - $chiphixuat - $chiphihuy - $chiphikhac;
     return view('admin.trangchu', compact('dtngay','hoadonban','total','hdban','hddaban','monan','dtthang','month',
     'subday','submonth','day','dtthangtruoc','soluongmonan','soluongncc','r','r0','r1','r2','r3','r4','dthq','dthn',
-    'dtt','dttt','donutchart'));
+    'dtt','dttt','donutchart','chiphixuat','chiphihuy','chiphikhac','chiphi','loinhuan','soluongdonhang'));
     }
 
 // User
@@ -322,89 +349,119 @@ class MyController extends Controller
         // $month = Carbon::now()->month;
         // ->whereMonth('ctpnhap.created_at', $month)
 
-        $nhap =DB::table('ctpnhap')-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
-        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        ->groupBy('Ten')->get();
-        $xuat =DB::table('ctpxuat')-> join('hanghoa','hanghoa.id','=','ctpxuat.id_hanghoa')
-        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        ->groupBy('Ten')->get();
-        $huy =DB::table('ctphuy')-> join('hanghoa','hanghoa.id','=','ctphuy.id_hanghoa')
-        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        ->groupBy('Ten')->get();
-        $ton =DB::table('ctpton')-> join('hanghoa','hanghoa.id','=','ctpton.id_hanghoa')
-        ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-        ->groupBy('Ten')->get();
-        // dd($xuat);
-            return view('baocao.tonghop',compact('nhap','xuat','huy','ton'));
+        // $nhap =DB::table('ctpnhap')-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
+        // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
+        // ->groupBy('Ten')->get();
+        $baocao = DB::select(DB::raw('select hanghoa.Ten, hanghoa.TonDK as TonDK, ifnull(Nhap.SLnhap,0) as Nhap, ifnull(Xuat.SLxuat,0) as Xuat, 
+        ifnull(Huy.SLhuy,0) as Huy, ifnull(Tra.SLtra,0) as Tra, 
+        ifnull(TonDK + ifnull(Nhap.SLnhap,0)  - ifnull(Xuat.SLxuat,0) - ifnull(Huy.SLhuy,0) - ifnull(Tra.SLtra,0),0) as Ton,
+        ifnull(TonTT.SLton,0) as TonTT, 
+        ifnull(TonDK + ifnull(Nhap.SLnhap,0)  - ifnull(Xuat.SLxuat,0) - ifnull(Huy.SLhuy,0) - ifnull(Tra.SLtra,0) - ifnull(TonTT.SLton,0),0) as ChenhLech 
+        from hanghoa
+        left join (Select Xuat.id_hanghoa,sum(SoLuong)SLxuat
+        From ctpxuat Xuat
+        Group By Xuat.id_hanghoa ) Xuat on Xuat.id_hanghoa = hanghoa.id
+        left join (Select Nhap.id_hanghoa,sum(SoLuong)SLnhap
+        From ctpnhap Nhap
+        Group By Nhap.id_hanghoa ) Nhap on Nhap.id_hanghoa = hanghoa.id
+        left join (Select Huy.id_hanghoa,sum(SoLuong)SLhuy
+        From ctphuy Huy
+        Group By Huy.id_hanghoa ) Huy on Huy.id_hanghoa = hanghoa.id
+        left join (Select Tra.id_hanghoa,sum(SoLuong)SLtra
+        From ctptra Tra
+        Group By Tra.id_hanghoa ) Tra on Tra.id_hanghoa = hanghoa.id
+        left join (Select TonTT.id_hanghoa,sum(SoLuong)SLton
+        From ctpton TonTT
+        Group By TonTT.id_hanghoa ) TonTT on TonTT.id_hanghoa = hanghoa.id'));
+        
+        return view('baocao.tonghop',compact('baocao'));
         }
-//Báo cáo cuối ngày
-    public function baocaocuoingay()
+    
+    public function tonghopngay(Request $request)
     {
-    // $month = Carbon::now()->month;
-    // ->whereMonth('ctpnhap.created_at', $month)
-    // $day = Carbon::today()->toDateString();
-    // $subday = Carbon::today()->subDay()->day;
-    // $month = Carbon::today()->month;
-    // $submonth = Carbon::today()->subMonth()->month;
-
-    // $nhap =DB::table('ctpnhap')->whereDate('ctpnhap.created_at',$day)-> join('hanghoa','hanghoa.id','=','ctpnhap.id_hanghoa')
-    // ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-    // ->groupBy('Ten')
-    // ->get();
-    $nhap =DB::table('hanghoa')-> leftjoin('ctpnhap','hanghoa.id','=','ctpnhap.id_hanghoa')
-        ->select('Ten', DB::raw('SUM(ctpnhap.SoLuong) as SL'))
+        $nhap =DB::table('ctpnhap')->whereBetween(DB::raw('DATE(ctpnhap.created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->leftjoin('hanghoa','hanghoa.id','ctpnhap.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'), DB::raw('SUM(TongTien) as TT'))
+        ->groupBy('Ten')
+        ->get();
+        $xuat =DB::table('ctpxuat')->whereBetween(DB::raw('DATE(ctpxuat.created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->leftjoin('hanghoa','hanghoa.id','ctpxuat.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'), DB::raw('SUM(TongTien) as TT'))
+        ->groupBy('Ten')
+        ->get();
+        $huy =DB::table('ctphuy')->whereBetween(DB::raw('DATE(ctphuy.created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->leftjoin('hanghoa','hanghoa.id','ctphuy.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'), DB::raw('SUM(TongTien) as TT'))
+        ->groupBy('Ten')
+        ->get();
+        $tra =DB::table('ctptra')->whereBetween(DB::raw('DATE(ctptra.created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->leftjoin('hanghoa','hanghoa.id','ctptra.id_hanghoa')
+        ->select('Ten', DB::raw('SUM(SoLuong) as SL'), DB::raw('SUM(TongTien) as TT'))
         ->groupBy('Ten')
         ->get();
 
-    $xuat =DB::table('hanghoa')-> leftjoin('ctpxuat','hanghoa.id','=','ctpxuat.id_hanghoa')
-    ->select('Ten', DB::raw('SUM(ctpxuat.SoLuong) as SL'))
-    ->groupBy('Ten')
-    ->get();
+        $tongnhap =DB::table('ctpnhap')->whereBetween(DB::raw('DATE(created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->sum('TongTien');
+        $tongxuat =DB::table('ctpxuat')->whereBetween(DB::raw('DATE(created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->sum('TongTien');
+        $tonghuy =DB::table('ctphuy')->whereBetween(DB::raw('DATE(created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->sum('TongTien');
+        $tongtra =DB::table('ctptra')->whereBetween(DB::raw('DATE(created_at)'),[$request->Ngay1,$request->Ngay2])
+        ->sum('TongTien');
 
-
-    $huy =DB::table('ctphuy')-> join('hanghoa','hanghoa.id','=','ctphuy.id_hanghoa')
-    ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-    ->groupBy('Ten')->get();
-    $ton =DB::table('ctpton')-> join('hanghoa','hanghoa.id','=','ctpton.id_hanghoa')
-    ->select('Ten', DB::raw('SUM(SoLuong) as SL'))
-    ->groupBy('Ten')->get();
-
-    
-        return view('baocao.baocaocuoingay',compact('nhap','xuat','huy','ton'));
+        $ngay1 = $request->Ngay1;
+        $ngay2 = $request->Ngay2;
+        return view('baocao.tonghopngay',compact('nhap','xuat','huy','tra','tongnhap','tongxuat','tonghuy','tongtra','ngay1','ngay2'));
     }
 
-//Hàng bán
-    public function hangban()
+//Báo cáo cuối ngày
+    public function baocaocuoingay()
     {
-        $hang=hanghoa::all();
-        return view('baocao.hangban',compact('hang'));
+    $day = Carbon::today()->toDateString();
+    $baocao = DB::select(DB::raw('select hanghoa.Ten, ifnull(Nhap.SLnhap,0) as Nhap, ifnull(Xuat.SLxuat,0) as Xuat, 
+    ifnull(Huy.SLhuy,0) as Huy, ifnull(Tra.SLtra,0) as Tra, 
+    ifnull(TonTT.SLton,0) as TonTT
+    from hanghoa
+    left join (Select Xuat.id_hanghoa,sum(SoLuong)SLxuat
+    From ctpxuat Xuat
+    where DATE(Xuat.updated_at) = cast(now() as date)
+    Group By Xuat.id_hanghoa ) Xuat on Xuat.id_hanghoa = hanghoa.id
+    left join (Select Nhap.id_hanghoa,sum(SoLuong)SLnhap
+    From ctpnhap Nhap
+    where DATE(Nhap.updated_at) = cast(now() as date)
+    Group By Nhap.id_hanghoa ) Nhap on Nhap.id_hanghoa = hanghoa.id
+    left join (Select Huy.id_hanghoa,sum(SoLuong)SLhuy
+    From ctphuy Huy
+    where DATE(Huy.updated_at) = cast(now() as date)
+    Group By Huy.id_hanghoa ) Huy on Huy.id_hanghoa = hanghoa.id
+    left join (Select Tra.id_hanghoa,sum(SoLuong)SLtra
+    From ctptra Tra
+    where DATE(Tra.updated_at) = cast(now() as date)
+    Group By Tra.id_hanghoa ) Tra on Tra.id_hanghoa = hanghoa.id
+    left join (Select TonTT.id_hanghoa,sum(SoLuong)SLton
+    From ctpton TonTT
+    where DATE(TonTT.updated_at) = cast(now() as date)
+    Group By TonTT.id_hanghoa ) TonTT on TonTT.id_hanghoa = hanghoa.id'));
+
+    $total = DB::table('cthdban')->where('Ngay',$day)->sum('TongTien');
+    $chiphixuat = DB::table('phieuxuat')->where('Ngay',$day)->sum('ThanhTien');
+    $chiphihuy = DB::table('phieuhuy')->where('Ngay',$day)->sum('ThanhTien');
+    $chiphikhac = DB::table('phieuchi')->whereDate('created_at',$day)->sum('ThanhTien');
+    $chiphi = $chiphixuat + $chiphihuy + $chiphikhac;
+    $loinhuan = $total - $chiphixuat - $chiphihuy - $chiphikhac;
+
+    $dthanghoa = cthdban::where('Ngay',$day)
+    ->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))
+    ->groupBy('id_monan')->get();
+
+    return view('baocao.baocaocuoingay',compact('baocao','day','total','dthanghoa','chiphixuat','chiphihuy','chiphikhac','loinhuan','chiphi'));
     }
-//Cập nhật hàng bán
-    public function capnhat()
-    {
-        $hanghoa=hanghoa::all();
-        foreach ($hanghoa as $hanghoa) {
-            // $hanghoa->SoLuong=0;
-            $hanghoa->Ton=0;
-            $hanghoa->Nhap=0;
-            $hanghoa->Xuat=0;
-            $hanghoa->Huy=0;
-            $hanghoa->TonDC= $hanghoa->DeLai;
-            $hanghoa->SoLuong= $hanghoa->DeLai;
-            $hanghoa->DeLai=0;
-            $hanghoa->ThanhTien=0;
-            $hanghoa->update();
-        }
-        return redirect()->back()->with('thongbao', 'Đã cập nhật!');
-    }
-    public function capnhatkhac(Request $request, $id){
-        $monan = monan::find($id);
-        
-    }
-//Excel bán
+
+//Excel báo cáo
     public function excel()
     {
-        $hang_data=DB::table('hanghoa')->where('ma','like','%1%')->orwhere('ma','like','%3%')->orwhere('ma','like','%5%')->orwhere('ma','like','%4%')->orwhere('ma','like','%6%')->get()->toArray();
+        $hang_data=DB::table('hanghoa')
+        ->get()->toArray();
         $hang_array[]= array('MãHH','Tên','Tồn ĐC','Nhập','Xuất','Số lượng bán','Tồn CC','Hủy','Để lại','ĐV tính','Đơn giá','Thành tiền');
         foreach($hang_data as $hang)
         {

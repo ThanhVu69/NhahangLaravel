@@ -1,5 +1,6 @@
+<!-- Biểu đồ cột món ăn có doanh thu cao nhất -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<canvas id="myChart1" width="400" height="400"></canvas>
+<canvas id="myChart1" width="400" height="150"></canvas>
 <script>
 const ctx = document.getElementById('myChart1').getContext('2d');
 const myChart1 = new Chart(ctx, {
@@ -7,14 +8,12 @@ const myChart1 = new Chart(ctx, {
     data: {
         labels: [@foreach($bieudo as $hh)
             '{{$hh->monan->Ten}}',
-            @endforeach
-        ],
+            @endforeach],
         datasets: [{
             label: [''],
             data: [@foreach($bieudo as $hh) 
                 {{$hh->TT}},
-                @endforeach
-            ],
+                @endforeach],
             backgroundColor: [
                 '#f39c12',
                 '#f39c12',
@@ -37,6 +36,7 @@ const myChart1 = new Chart(ctx, {
                 text: 'Top món ăn doanh thu cao hôm nay'
             }
         },
+        barPercentage: 0.3
     }
 });
 </script>

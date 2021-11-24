@@ -36,7 +36,7 @@ class DoanhthuController extends Controller
     $total = DB::table('cthdban')->sum('TongTien');
     $cthdban= cthdban::all();
 
-//Doanh thu theo ngày
+    //Doanh thu theo ngày
     $dtmonan =DB::table('hdban')
       ->select(DB::raw('DATE(Ngay) as date'), DB::raw('SUM(ThanhTien) as DT'), DB::raw('COUNT(id) as HD'))
       ->groupBy('date')
@@ -56,16 +56,27 @@ class DoanhthuController extends Controller
     ->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
     ->orderBy('TT','DESC')->skip(0)->take(7)->get();
 
-    return view('doanhthu.doanhthu',compact('total','cthdban','dtmonan','dtthang','dtnam','day','dthanghoa','bieudo'));
+    $bieudovung = DB::table('hdban')
+    ->select(DB::raw('DATE(Ngay) as date'), DB::raw('SUM(ThanhTien) as DT'))
+    ->groupBy('date')
+    ->orderBy('date','ASC')->skip(0)->take(14)
+    ->get();
+
+    return view('doanhthu.doanhthu',compact('total','cthdban','dtmonan','dtthang','dtnam','day','dthanghoa','bieudo','bieudovung'));
     }
 
 //Doanh thu lọc theo ngày
     public function doanhthungay(Request $request)
     {   
         $total = DB::table('cthdban')->whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->sum('TongTien');
-        $dthanghoa = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')->get();
-        $bieudo = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
+        $dthanghoa = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])
+        ->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
+        ->get();
+
+        $bieudo = cthdban::whereBetween('Ngay',[$request->Ngay1,$request->Ngay2])
+        ->select('id_monan',DB::raw('SUM(TongTien) as TT'),DB::raw('SUM(SoLuong) as SL'))->groupBy('id_monan')
         ->orderBy('TT','DESC')->skip(0)->take(7)->get();
+        
         $ngay1 = $request->Ngay1;
         $ngay2 = $request->Ngay2;
         return view('doanhthu.doanhthungay',compact('total','dthanghoa','ngay1','ngay2','bieudo'));

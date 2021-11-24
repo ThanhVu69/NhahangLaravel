@@ -64,7 +64,7 @@
                 <ul class="treeview-menu">
                     <li><a href="{{url('doanhthu')}}"><i class="fa fa-circle-o"></i> Doanh thu</a></li>
                     <li><a href="{{url('tonghop')}}"><i class="fa fa-circle-o"></i> Tổng hợp</a></li>
-                    <!-- <li><a href="{{url('baocaocuoingay')}}"><i class="fa fa-circle-o"></i> Báo cáo cuối ngày</a></li> -->
+                    <li><a href="{{url('baocaocuoingay')}}"><i class="fa fa-circle-o"></i> Báo cáo cuối ngày</a></li>
                 </ul>
             </li>
         </ul>

@@ -43,7 +43,6 @@
             <section class="content">
                 @include('admin.part1')
                 @include('admin.part2')
-                
                 @include('admin.part4')
             </section>
         </div>

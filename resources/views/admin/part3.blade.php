@@ -2,30 +2,26 @@
     <div class="row">
         <div class="col-sm-3 col-xs-6">
             <div class="description-block border-right">
-                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                <h5 class="description-header">$35,210.43</h5>
-                <span class="description-text">TOTAL REVENUE</span>
+                <h5 class="description-header">{{number_format($total)}}.000VNĐ</h5>
+                <span class="description-text">TỔNG DOANH THU</span>
             </div><!-- /.description-block -->
         </div><!-- /.col -->
         <div class="col-sm-3 col-xs-6">
             <div class="description-block border-right">
-                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                <h5 class="description-header">$10,390.90</h5>
-                <span class="description-text">TOTAL COST</span>
+                <h5 class="description-header">{{number_format($chiphi)}}.000VNĐ</h5>
+                <span class="description-text">TỔNG CHI PHÍ</span>
             </div><!-- /.description-block -->
         </div><!-- /.col -->
         <div class="col-sm-3 col-xs-6">
             <div class="description-block border-right">
-                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                <h5 class="description-header">$24,813.53</h5>
-                <span class="description-text">TOTAL PROFIT</span>
+                <h5 class="description-header">{{number_format($loinhuan)}}.000VNĐ</h5>
+                <span class="description-text">LỢI NHUẬN</span>
             </div><!-- /.description-block -->
         </div><!-- /.col -->
         <div class="col-sm-3 col-xs-6">
             <div class="description-block">
-                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                <h5 class="description-header">1200</h5>
-                <span class="description-text">GOAL COMPLETIONS</span>
+                <h5 class="description-header">{{number_format($soluongdonhang)}}</h5>
+                <span class="description-text">SỐ LƯỢNG ĐƠN HÀNG</span>
             </div><!-- /.description-block -->
         </div>
     </div><!-- /.row -->

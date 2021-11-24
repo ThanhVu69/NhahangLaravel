@@ -61,9 +61,11 @@
                                         <tr role="row">
                                             <th>Mã HH</th>
                                             <th>Tên</th>
-                                            <th>Giá</th>
+                                            <th>Đơn giá</th>
                                             <th>Nhà cung cấp</th>
                                             <th>Đơn vị tính</th>
+                                            <th>Tồn đầu kỳ</th>
+                                            <th>Giá trị hàng tồn</th>
                                             <th>Ghi chú</th>
                                             <th></th>
                                             <th></th>
@@ -77,6 +79,8 @@
                                             <td>{{$hh->gia}}</td>
                                             <td>{{$hh->nhacungcap->ten}}</td>
                                             <td>{{$hh->DVTinh}}</td>
+                                            <td>{{$hh->TonDK}}</td>
+                                            <td>{{$hh->ThanhTien}}</td>
                                             <td>{{$hh->ghichu}}</td>
                                             @if($xem_ac[0]->quyen==1)
                                             <td><a href="xoahanghoa/{{$hh->id}}"
@@ -138,6 +142,10 @@
                                         <div class="form-group">
                                             <label>Đơn vị tính</label>
                                             <input required type="text" name="DVTinh" class="form-control" require />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tồn đầu kỳ</label>
+                                            <input required type="number" name="TonDK" class="form-control" require />
                                         </div>
                                         <div class="form-group">
                                             <label>Ghi chú</label><br>
@@ -202,6 +210,11 @@
                                         <label>Đơn vị tính</label>
                                         <input type="text" name="DVTinh" class="form-control" placeholder="Đơn vị tính"
                                             value="{{$hh->DVTinh}}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tồn đầu kỳ</label>
+                                        <input type="number" name="TonDK" class="form-control" 
+                                            value="{{$hh->TonDK}}" />
                                     </div>
                                     <div class="form-group">
                                         <label>Ghi chú</label><br>

@@ -36,6 +36,11 @@ class HanghoaController extends Controller
     $hanghoa->gia= $request->gia;
     $hanghoa->id_nhacc= $request->id_nhacc;
     $hanghoa->DVTinh= $request->DVTinh;
+    $hanghoa->TonDK= $request->TonDK;
+    $dongia = $request->gia;
+    $soluong = $request->TonDK;
+    $thanhtien = $dongia * $soluong;
+    $hanghoa->ThanhTien= $thanhtien;
     $hanghoa->ghichu= $request->ghichu;
     $hanghoa->save();
     echo"<script>
@@ -51,6 +56,11 @@ class HanghoaController extends Controller
         $hanghoa->gia= $request->gia;
         $hanghoa->id_nhacc= $request->id_nhacc;
         $hanghoa->DVTinh= $request->DVTinh;
+        $hanghoa->TonDK= $request->TonDK;
+        $dongia = $request->gia;
+        $soluong = $request->TonDK;
+        $thanhtien = $dongia * $soluong;
+        $hanghoa->ThanhTien= $thanhtien;
         $hanghoa->ghichu= $request->ghichu;
         $hanghoa->save();
         echo"<script>

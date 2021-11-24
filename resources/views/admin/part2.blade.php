@@ -70,6 +70,7 @@
                                 bottom: 50
                             }
                         },
+                        barPercentage: 0.3
                     },
 
                 });
