@@ -156,11 +156,11 @@ class MyController extends Controller
             $r1 = $dtthang -> DTT; 
         }
     }
-    foreach($dtthangtruoc as $dtthangtruoc){
-        $r2 = $dtthangtruoc -> DTTT;
-        $dttt =  $dtthangtruoc -> lastmonth;
-    }
-    $r = number_format(($r1-$r2)/$r2*100, 1);
+    // foreach($dtthangtruoc as $dtthangtruoc){
+    //     $r2 = $dtthangtruoc -> DTTT;
+    //     $dttt =  $dtthangtruoc -> lastmonth;
+    // }
+    $r = number_format(($r1-1)/1*100, 1);
 
     if($r3 <> 0){
         $r4= number_format(($r0-$r3)/$r3*100, 1);
