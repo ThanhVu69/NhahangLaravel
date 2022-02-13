@@ -16,6 +16,10 @@ class phieutra extends Model
     {
         return $this->belongsTo('App\nhanvien','id_nhanvien','id');
     }
+    public function nhacungcap()
+    {
+        return $this->belongsTo('App\nhacungcap','id_nhacc','id');
+    }
     public function User()
     {
         return $this->belongsTo('App\User','id_nhanvien','id');

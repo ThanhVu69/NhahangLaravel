@@ -79,7 +79,8 @@
                                         <tr role="row">
                                             <th>Mã PH</th>
                                             <th>Ngày</th>
-                                            <th>Người hủy</th>
+                                            <th>Người trả</th>
+                                            <th>Nhà cung cấp</th>
                                             <th>Tổng tiền</th>
                                             <th></th>
                                             <th></th>
@@ -92,6 +93,7 @@
                                             <td>{{$product->ma}}{{$product->id}}</td>
                                             <td>{{$product->Ngay}}</td>
                                             <td>{{$product->User->name}}</td>
+                                            <td>{{$product->nhacungcap->ten}}</td>
                                             <td>{{$product->ThanhTien}}.000VNĐ</td>
                                             <td></i><a href="#" data-toggle="modal" class="btn btn-primary btn-sm"
                                                     data-target="#{{$product->id}}">Chi tiết</a>

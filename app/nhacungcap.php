@@ -12,4 +12,8 @@ class nhacungcap extends Model
     {
         return $this->hasMany('App\hanghoa','id_nhacc','id');
     }
+    public function phieutra()
+    {
+        return $this->hasMany('App\phieutra','id_nhacc','id');
+    }
 }
